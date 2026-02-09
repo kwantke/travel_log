@@ -1,12 +1,14 @@
-import { StrictMode } from 'react'
-import { createRoot } from 'react-dom/client'
-import { Global } from "@emotion/react";
+import { StrictMode } from "react";
+import { createRoot } from "react-dom/client";
+import { Global, ThemeProvider } from "@emotion/react";
 import { globalStyle } from "@styles/globalStyle";
-import App from './App.tsx'
-
-createRoot(document.getElementById('root')!).render(
+import App from "./App.tsx";
+import theme from "@styles/theme";
+createRoot(document.getElementById("root")!).render(
   <StrictMode>
-    <Global styles={globalStyle}/>
-    <App />
+    <ThemeProvider theme={theme}>
+      <Global styles={globalStyle} />
+      <App />
+    </ThemeProvider>
   </StrictMode>,
-)
+);
