@@ -27,7 +27,8 @@
     "jsxImportSource": "@emotion/react",
     "baseUrl": ".",
     "paths": {
-      "@styles/*": ["src/styles/*"] // 3. @styles 경로 매핑
+      "@components/*": ["src/components/*"],
+      "@styles/*": ["src/styles/*"]
     }
   },
   "include": ["src"]
