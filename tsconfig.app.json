@@ -30,7 +30,12 @@
       "@components/*": ["src/components/*"],
       "@styles/*": ["src/styles/*"],
       "@constants/*": ["src/constants/*"],
-      "@assets/*": ["src/assets/*"]
+      "@assets/*": ["src/assets/*"],
+      "@utils/*": ["src/utils/*"],
+      "@hooks/*": ["src/hooks/*"],
+      "@contexts/*": ["src/contexts/*"],
+      "@type/*": ["src/types/*"],
+      "@providers/*": ["src/providers/*"],
     }
   },
   "include": ["src"]
