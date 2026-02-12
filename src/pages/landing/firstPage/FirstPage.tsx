@@ -3,8 +3,9 @@ import * as S from "./FirstPage.styled";
 import { ROUTE_PATHS_MAP } from "@constants/route";
 import { createAnimation } from "../Animation.styled";
 import useAnimationObserver from "../hook/useAnimationObserver";
-import {Text,Button} from "@components/common";
+import Text from "@components/Text/Text";
 import { BigTturi } from "@assets/webp";
+import Button from "@components/Button/Button";
 export default function FirstPage() {
   const navigate = useNavigate();
   const handleClick = () => {
