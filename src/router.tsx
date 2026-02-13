@@ -4,8 +4,6 @@ import LandingPage from "./pages/landing/LandingPage";
 import AppLayout from "./layout/AppLayout/AppLayout";
 import MainPage from "./pages/main/MainPage";
 
-
-
 export const router = createBrowserRouter([
   {
     path: ROUTE_PATHS_MAP.root,
@@ -13,15 +11,11 @@ export const router = createBrowserRouter([
   },
   {
     Component: AppLayout,
-    children:[
+    children: [
       {
         path: ROUTE_PATHS_MAP.main,
-        Component: MainPage
+        Component: MainPage,
       },
-      {
-        path: ROUTE_PATHS_MAP.travelogue(),
-        element: 
-      }
-    ]
-  }
+    ],
+  },
 ]);
