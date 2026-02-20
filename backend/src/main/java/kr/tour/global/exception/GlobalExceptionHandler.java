@@ -2,6 +2,7 @@ package kr.tour.global.exception;
 
 import lombok.extern.slf4j.Slf4j;
 import org.apache.coyote.BadRequestException;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -43,6 +44,15 @@ public class GlobalExceptionHandler {
 
         ExceptionResponse data = new ExceptionResponse("서버에 문제가 발생했습니다. 투룻에 문의해 주세요.");
         return ResponseEntity.internalServerError()
+                .body(data);
+    }
+
+    @ExceptionHandler(UnauthorizedException.class)
+    public ResponseEntity<ExceptionResponse> handleUnauthorized(UnauthorizedException exception) {
+        log.warn("UNAUTHORIZED_EXCEPTION :: message = {}", exception.getMessage());
+
+        ExceptionResponse data = new ExceptionResponse(exception.getMessage());
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
                 .body(data);
     }
 
