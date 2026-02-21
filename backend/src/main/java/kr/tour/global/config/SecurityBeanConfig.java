@@ -1,4 +1,4 @@
-package kr.tour.auth.infrastructure.config;
+package kr.tour.global.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
