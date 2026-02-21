@@ -6,7 +6,7 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import kr.tour.auth.dto.request.RequestUser;
-import kr.tour.auth.infrastructure.JwtTokenProvider;
+import kr.tour.global.config.JwtTokenProvider;
 import kr.tour.global.exception.ExceptionResponse;
 import kr.tour.global.log.logger.ConsoleLogger;
 import lombok.RequiredArgsConstructor;
@@ -20,7 +20,6 @@ import org.springframework.web.filter.OncePerRequestFilter;
 import java.io.IOException;
 import java.util.Collections;
 import java.util.List;
-import java.util.UUID;
 
 @Slf4j
 @RequiredArgsConstructor

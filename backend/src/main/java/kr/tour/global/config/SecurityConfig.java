@@ -1,7 +1,6 @@
 package kr.tour.global.config;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import kr.tour.auth.infrastructure.JwtTokenProvider;
 import kr.tour.global.auth.jwt.JwtAuthenticationFilter;
 import kr.tour.global.log.logger.ConsoleLogger;
 import lombok.RequiredArgsConstructor;

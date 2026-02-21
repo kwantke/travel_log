@@ -1,8 +1,6 @@
-package kr.tour.auth.infrastructure;
+package kr.tour.global.config;
 
-import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.ExpiredJwtException;
-import io.jsonwebtoken.JwtException;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.security.Keys;
 import kr.tour.auth.dto.response.TokenResponse;
