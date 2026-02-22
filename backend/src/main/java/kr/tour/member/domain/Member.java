@@ -41,4 +41,8 @@ public class Member extends AuditingFields {
   public Member(Long kakaoId, String nickname, String profileImageUrl, LoginType loginType) {
     this(null, kakaoId, null, null, nickname, profileImageUrl, loginType);
   }
+
+  public Member(String email, String password, String nickname, String profileImageUrl, LoginType loginType) {
+    this(null, null, email, password, nickname, profileImageUrl, loginType);
+  }
 }
