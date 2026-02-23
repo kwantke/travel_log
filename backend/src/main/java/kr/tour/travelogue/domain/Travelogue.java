@@ -1,6 +1,7 @@
 package kr.tour.travelogue.domain;
 
 import jakarta.persistence.*;
+import kr.tour.global.entity.AuditingFields;
 import kr.tour.member.domain.Member;
 import lombok.*;
 import org.hibernate.annotations.SQLDelete;
@@ -13,10 +14,10 @@ import java.util.List;
 @EqualsAndHashCode(of = "id", callSuper = false)
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
-@SQLRestriction("delete_at IS NULL")
+@SQLRestriction("deleted_at IS NULL")
 @SQLDelete(sql="UPDATE travelogue SET deleted_at = NOW() WHERE id = ?")
 @Entity
-public class Travelogue {
+public class Travelogue extends AuditingFields {
 
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -35,6 +36,9 @@ public class Travelogue {
 
   @OneToMany(mappedBy = "travelogue", cascade = CascadeType.ALL, orphanRemoval = true)
   private List<TravelogueDay> travelogueDays = new ArrayList<>();
+
+  @OneToMany(mappedBy = "travelogue")
+  private List<TravelogueTag> travelogueTags = new ArrayList<>();
 
   private Travelogue(Long id, Member author, String title, String thumbnail, Long likeCount) {
     this.id = id;
