@@ -1,7 +1,7 @@
 package kr.tour.auth.application;
 
 import kr.tour.auth.dto.request.LoginRequest;
-import kr.tour.auth.dto.response.LoginResposne;
+import kr.tour.auth.dto.response.LoginResponse;
 import kr.tour.auth.dto.response.OauthUserInformationResponse;
 import kr.tour.auth.infrastructure.KakaoOauthProvider;
 import kr.tour.global.config.JwtTokenProvider;
@@ -30,12 +30,12 @@ public class LoginService {
 
 
   @Transactional(readOnly = true)
-  public LoginResposne login(LoginRequest request) {
+  public LoginResponse login(LoginRequest request) {
     Member member = memberRepository.findByEmail(request.email())
             .orElseThrow(() -> new CoreException(MemberErrorCode.INVALID_MEMBER_INFO));
 
     validatePassword(request, member);
-    return LoginResposne.of(member, jwtTokenProvider.createToken(member.getId()));
+    return LoginResponse.of(member, jwtTokenProvider.createToken(member.getId()));
   }
 
   private void validatePassword(LoginRequest request, Member member) {
@@ -44,13 +44,13 @@ public class LoginService {
     }
   }
 
-  public LoginResposne oauthLogin(String code, String encodedRedirectUri) {
+  public LoginResponse oauthLogin(String code, String encodedRedirectUri) {
     String redirectUri = URLDecoder.decode(encodedRedirectUri, StandardCharsets.UTF_8);
     OauthUserInformationResponse userInfo = kakaoOauthProvider.getUserInformation(code, redirectUri);
     Member member = memberRepository.findByKakaoId(userInfo.socialLoginId())
             .orElseGet(() -> signUp(userInfo));
 
-    return LoginResposne.of(member, jwtTokenProvider.createToken(member.getId()));
+    return LoginResponse.of(member, jwtTokenProvider.createToken(member.getId()));
   }
 
   private Member signUp(OauthUserInformationResponse userInfo) {

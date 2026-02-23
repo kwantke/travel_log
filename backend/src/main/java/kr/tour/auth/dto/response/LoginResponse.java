@@ -1,18 +1,19 @@
 package kr.tour.auth.dto.response;
 
+import io.swagger.v3.oas.annotations.media.Schema;
 import kr.tour.member.domain.Member;
 import lombok.Builder;
 
 @Builder
-public record LoginResposne (
+public record LoginResponse(
         Long memberId,
         String nickname,
         String profileImageUrl,
         String accessToken,
         String refreshToken
 ){
-  public static LoginResposne of(Member m, TokenResponse t) {
-    return LoginResposne.builder()
+  public static LoginResponse of(Member m, TokenResponse t) {
+    return LoginResponse.builder()
             .memberId(m.getId())
             .nickname(m.getNickname())
             .profileImageUrl(m.getProfileImageUrl())
