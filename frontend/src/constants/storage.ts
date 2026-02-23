@@ -1,3 +1,6 @@
 export const STORAGE_KEYS_MAP = {
-  user: "tourootUser",
+  user: "tourUser",
+  mainPageSelectedTagIDs: "mainPageSelectedTagIDs",
+  mainPageSort: "mainPageSort",
+  mainPageTravelPeriod: "mainPageTravelPeriod",
 } as const;

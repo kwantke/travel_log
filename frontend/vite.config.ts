@@ -32,6 +32,8 @@ export default defineConfig({
       "@contexts": path.resolve(__dirname, "./src/contexts"),
       "@type": path.resolve(__dirname, "./src/types"),
       "@providers": path.resolve(__dirname, "./src/providers"),
+      "@apis": path.resolve(__dirname, "./src/apis"),
+      "@queries": path.resolve(__dirname, "./src/queries"),
     },
   },
   test: {
