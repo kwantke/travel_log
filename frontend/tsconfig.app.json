@@ -35,7 +35,9 @@
       "@hooks/*": ["src/hooks/*"],
       "@contexts/*": ["src/contexts/*"],
       "@type/*": ["src/types/*"],
-      "@providers/*": ["src/providers/*"]
+      "@providers/*": ["src/providers/*"],
+      "@apis/*": ["src/apis/*"],
+      "@queries/*": ["src/queries/*"]
     }
   },
   "include": ["src"]
