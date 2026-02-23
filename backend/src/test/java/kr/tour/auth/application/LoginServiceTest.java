@@ -1,6 +1,6 @@
 package kr.tour.auth.application;
 
-import kr.tour.auth.dto.response.LoginResposne;
+import kr.tour.auth.dto.response.LoginResponse;
 import kr.tour.auth.dto.response.TokenResponse;
 import kr.tour.auth.fixture.OauthUserInformationFixture;
 import kr.tour.auth.infrastructure.KakaoOauthProvider;
@@ -56,11 +56,11 @@ class LoginServiceTest {
     given(jwtTokenProvider.createToken(MEMBER.getId()))
             .willReturn(new TokenResponse(accessToken, refreshToken));
 
-    LoginResposne response = loginService.oauthLogin(AUTHENTICATION_CODE, REDIRECT_URI);
+    LoginResponse response = loginService.oauthLogin(AUTHENTICATION_CODE, REDIRECT_URI);
 
     //When & Then
     assertThat(response).isEqualTo(
-            LoginResposne.of(MEMBER, new TokenResponse(response.accessToken(), response.refreshToken()))
+            LoginResponse.of(MEMBER, new TokenResponse(response.accessToken(), response.refreshToken()))
     );
   }
 }
