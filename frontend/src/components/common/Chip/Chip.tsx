@@ -2,6 +2,8 @@ import { CYPRESS_DATA_MAP, CYPRESS_SELECTOR_MAP } from "@constants/cypress";
 import { DEFAULT_ELEMENT } from "./Chip.constants";
 import * as S from "./Chip.styled";
 import Text from "../Text/Text";
+import Icon from "../Icon/Icon";
+import theme from "@styles/theme";
 interface ChipOwnProps<
   Element extends React.ElementType = typeof DEFAULT_ELEMENT,
 > {
@@ -40,7 +42,25 @@ export default function Chip<E extends React.ElementType>({
         }
         {...props}
       >
-        <Text textType={isSelected ? "detailBold" : "detail"} />
+        {iconPosition === "left" && (
+          <Icon
+            iconType={iconType}
+            size="8"
+            color={
+              isSelected ? theme.colors.primary : theme.colors.text.secondary
+            }
+          />
+        )}
+        <Text textType={isSelected ? "detailBold" : "detail"}>{label}</Text>
+        {iconPosition === "right" && (
+          <Icon
+            iconType={iconType}
+            size="8"
+            color={
+              isSelected ? theme.colors.primary : theme.colors.text.secondary
+            }
+          />
+        )}
       </S.Layout>
       ;
     </>
