@@ -5,8 +5,8 @@ import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import kr.tour.auth.dto.request.RequestUser;
 import kr.tour.global.config.JwtTokenProvider;
+import kr.tour.global.dto.MemberAuth;
 import kr.tour.global.exception.ExceptionResponse;
 import kr.tour.global.log.logger.ConsoleLogger;
 import lombok.RequiredArgsConstructor;
@@ -67,10 +67,10 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     }
 
     private void authenticateAsMember(String memberId) {
-        RequestUser requestUser = new RequestUser(memberId);
+        MemberAuth memberAuth = MemberAuth.from(Long.parseLong(memberId));
 
         UsernamePasswordAuthenticationToken auth =
-                new UsernamePasswordAuthenticationToken(requestUser, null, Collections.emptyList());
+                new UsernamePasswordAuthenticationToken(memberAuth, null, Collections.emptyList());
         SecurityContextHolder.getContext().setAuthentication(auth);
     }
 
