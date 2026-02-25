@@ -1,0 +1,49 @@
+spring:
+  config:
+    activate:
+      on-profile: local
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://localhost:33306/dev_tour
+    username: dev_user
+    password: dev_password
+  jpa:
+    show-sql: true
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.MySQLDialect
+        format_sql: true
+    hibernate:
+      ddl-auto: validate
+
+# Jwt
+
+jwt:
+  token:
+    secret-key: SNwFG2NQDZkmIK3nNoZFdwQ0ZxKuoe+qcw10ljdW941YEx/Qky9PEEl+wvAN9
+    expire-length: 1800000 # 30 min
+  refresh:
+    secret-key: SNwFG2NQDZkmIK3nNoZFdwQ0ZxKuoe+qcw10ljdW941YEx/Qky9PEEl+wvAN9
+    expire-length: 1209600000 # 14 days
+
+oauth:
+  kakao:
+    user-information-request-uri: https://kapi.kakao.com/v2/user/me
+    access-token-request-uri: https://kauth.kakao.com/oauth/token
+    rest-api-key: 30dbed9539219c3e8336ed81508e8488
+    client-secret: WVJ68aVBY0aDQzrwHzVnP1b61X4F2jdc
+
+logging:
+  level:
+    org.hibernate.SQL: DEBUG
+    org.hibernate.orm.jdbc.bind: TRACE
+    org.springframework.cache: TRACE
+
+cloud:
+  aws:
+    s3:
+      bucket: kwantke
+      image-base-uri: https://dev.tour.kr/
+      origin-storage-path: tour/
+      temporary-storage-paht: temporary/
+      image-storage-path: images/
