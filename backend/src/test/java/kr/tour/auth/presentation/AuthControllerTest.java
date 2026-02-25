@@ -6,7 +6,7 @@ import static org.mockito.BDDMockito.given;
 import com.epages.restdocs.apispec.ResourceSnippetParameters;
 import kr.tour.auth.application.LoginService;
 import kr.tour.auth.dto.response.LoginResponse;
-import kr.tour.global.ControllerTest;
+import kr.tour.global.fixture.ControllerTest;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
