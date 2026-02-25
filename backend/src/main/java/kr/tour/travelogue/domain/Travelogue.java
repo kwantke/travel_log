@@ -53,4 +53,25 @@ public class Travelogue extends AuditingFields {
   }
 
 
+  public void addDay(TravelogueDay travelogueDay) {
+    travelogueDay.updateTravelogue(this);
+    travelogueDays.add(travelogueDay);
+
+  }
+
+  public void updateThumbnail(String thumbnail) {
+    this.thumbnail = thumbnail;
+  }
+
+  public Long getAuthorId() {
+    return author.getId();
+  }
+
+  public String getAuthorNickname() {
+    return author.getNickname();
+  }
+
+  public String getAuthorProfileImageUrl() {
+    return author.getProfileImageUrl();
+  }
 }

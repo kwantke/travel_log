@@ -69,4 +69,24 @@ public class TraveloguePlace extends AuditingFields {
     this.countryCode = CountryCode.from(countryCode);
   }
 
+  public TraveloguePlace (
+          Integer order,
+          String description,
+          String name,
+          String latitude,
+          String longitude,
+          TravelogueDay travelogueDay,
+          String countryCode
+  ){
+    this(null, order, description, name, new Position(latitude, longitude), travelogueDay, countryCode);
+  }
+
+  public void updateTravelogueDay(TravelogueDay travelogueDay) {
+    this.travelogueDay = travelogueDay;
+  }
+
+  public void addPhoto(TraveloguePhoto traveloguePhoto) {
+    traveloguePhoto.updateTraveloguePlace(this);
+    traveloguePhotos.add(traveloguePhoto);
+  }
 }

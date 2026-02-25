@@ -1,9 +1,13 @@
 package kr.tour.travelogue.presentation;
 
 import io.swagger.v3.oas.annotations.Parameter;
+import jakarta.validation.Valid;
+import kr.tour.global.dto.MemberAuth;
 import kr.tour.travelogue.application.TravelogueFacadeService;
 import kr.tour.travelogue.dto.request.TravelogueFilterRequest;
+import kr.tour.travelogue.dto.request.TravelogueRequest;
 import kr.tour.travelogue.dto.request.TravelogueSearchRequest;
+import kr.tour.travelogue.dto.response.TravelogueCreateResponse;
 import kr.tour.travelogue.dto.response.TravelogueSimpleResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -11,9 +15,10 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.web.bind.annotation.*;
+
+import java.net.URI;
 
 @RequiredArgsConstructor
 @RestController
@@ -39,4 +44,14 @@ public class TravelogueController {
 
     return ResponseEntity.ok(data);
   }
+
+  @PostMapping
+  public ResponseEntity<Void> createTravelogue(
+          @Valid @AuthenticationPrincipal MemberAuth member,
+          @Valid @RequestBody TravelogueRequest request
+          ) {
+    TravelogueCreateResponse response = travelogueFacadeService.createTravelogue(member, request);
+    return ResponseEntity.created(URI.create("/api/v1/travelogues/" + response.id())).build();
+  }
+
 }

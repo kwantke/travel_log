@@ -33,4 +33,9 @@ public class TravelogueService {
     return travelogueQueryRepository.findAllByCondition(searchCondition, filter, pageable);
   }
 
+  public Travelogue save(Travelogue travelogue) {
+    return travelogueRepository.save(travelogue);
+  }
+
+
 }
