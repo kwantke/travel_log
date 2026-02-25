@@ -1,4 +1,4 @@
-package kr.tour.global;
+package kr.tour.global.fixture;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import kr.tour.global.config.JwtTokenProvider;

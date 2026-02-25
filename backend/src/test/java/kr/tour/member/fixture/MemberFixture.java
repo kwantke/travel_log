@@ -8,7 +8,7 @@ import lombok.Getter;
 @AllArgsConstructor
 @Getter
 public enum MemberFixture {
-  KAKAO_MEMBER(1L, null, null, "https://dev.touroot.kr/temporary/profile.png", "리비",
+  KAKAO_MEMBER(1L, null, null, "https://dev.touroot.kr/temporary/profile.png", "테스터",
           LoginType.KAKAO),
   ;
 
