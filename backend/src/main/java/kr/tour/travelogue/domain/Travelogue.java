@@ -19,6 +19,8 @@ import java.util.List;
 @Entity
 public class Travelogue extends AuditingFields {
 
+  private static final int LIKE_COUNT_WEIGHT = 1;
+
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long id;
@@ -32,7 +34,7 @@ public class Travelogue extends AuditingFields {
   @Column(nullable = false)
   private String thumbnail;
   @Column(nullable = false)
-  private Long likeCount;
+  private Long likeCount = 0L;
 
   @OneToMany(mappedBy = "travelogue", cascade = CascadeType.ALL, orphanRemoval = true)
   private List<TravelogueDay> travelogueDays = new ArrayList<>();
@@ -73,5 +75,9 @@ public class Travelogue extends AuditingFields {
 
   public String getAuthorProfileImageUrl() {
     return author.getProfileImageUrl();
+  }
+
+  public void increaseLikeCount() {
+    likeCount += LIKE_COUNT_WEIGHT;
   }
 }
