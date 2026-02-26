@@ -26,6 +26,7 @@ public record TravelogueSimpleResponse(
             .authorNickname(travelogue.getAuthor().getNickname())
             .authorProfileUrl(travelogue.getAuthor().getProfileImageUrl())
             .tags(getTravelogueTags(travelogue.getTravelogueTags()))
+            .likeCount(travelogue.getLikeCount())
             .build();
   }
 
