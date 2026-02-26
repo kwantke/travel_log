@@ -1,0 +1,30 @@
+package kr.tour.travelogue.fixture;
+
+import kr.tour.travelogue.domain.TravelogueDay;
+import kr.tour.travelogue.domain.TraveloguePlace;
+import lombok.Getter;
+import lombok.RequiredArgsConstructor;
+
+import static kr.tour.travelogue.fixture.TravelogueDayFixture.TRAVELOGUE_DAY;
+
+@Getter
+@RequiredArgsConstructor
+public enum TraveloguePlaceFixture {
+  TRAVELOGUE_PLACE(1, "에메발드 빛 해변", "광안리 해수욕장", "34.54343", "126.66977", TRAVELOGUE_DAY.get(), "KR"),
+  ;
+
+  private final int order;
+  private final String description;
+  private final String name;
+  private final String latitude;
+  private final String longitude;
+  private final TravelogueDay day;
+  private final String countryCode;
+
+  public TraveloguePlace get() {
+    return new TraveloguePlace(order, description, name, latitude, longitude, day, countryCode);
+  }
+  public TraveloguePlace create(TravelogueDay day) {
+    return new TraveloguePlace(order, description, name, latitude, longitude, day, countryCode);
+  }
+}
