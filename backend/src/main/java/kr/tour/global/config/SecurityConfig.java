@@ -2,10 +2,14 @@ package kr.tour.global.config;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import kr.tour.global.auth.jwt.JwtAuthenticationFilter;
+import kr.tour.global.log.RequestLoggingFallbackFilter;
 import kr.tour.global.log.logger.ConsoleLogger;
+import kr.tour.global.log.logger.JsonLogger;
 import lombok.RequiredArgsConstructor;
+import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.core.Ordered;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
@@ -19,6 +23,8 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import java.util.Arrays;
 import java.util.List;
 
+
+
 @Configuration
 @EnableWebSecurity
 @RequiredArgsConstructor
@@ -30,7 +36,7 @@ public class SecurityConfig {
           "/api/v1/travelogues/**"
   };
 
-
+  private final JsonLogger jsonLogger;
   private final ConsoleLogger consoleLogger;
   private final ObjectMapper objectMapper;
   private final JwtTokenProvider jwtTokenProvider;
@@ -54,6 +60,21 @@ public class SecurityConfig {
                     UsernamePasswordAuthenticationFilter.class
             ).build();
 
+  }
+
+  @Bean
+  public RequestLoggingFallbackFilter requestLoggingFilter() {
+    return new RequestLoggingFallbackFilter(jsonLogger, consoleLogger);
+  }
+
+  @Bean
+  public FilterRegistrationBean<RequestLoggingFallbackFilter> requestLoggingFallbackFilterRegistration(
+          RequestLoggingFallbackFilter requestLoggingFallbackFilter) {
+    FilterRegistrationBean<RequestLoggingFallbackFilter> registrationBean = new FilterRegistrationBean<>();
+    registrationBean.setFilter(requestLoggingFallbackFilter);
+    registrationBean.setOrder(Ordered.HIGHEST_PRECEDENCE + 1);
+    registrationBean.addUrlPatterns("/*");
+    return registrationBean;
   }
 
   @Bean

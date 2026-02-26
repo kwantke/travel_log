@@ -2,6 +2,8 @@ package kr.tour.travelogue.infrastructure.query;
 
 import com.querydsl.core.types.Order;
 import com.querydsl.core.types.OrderSpecifier;
+import com.querydsl.core.types.dsl.Expressions;
+import com.querydsl.core.types.dsl.StringPath;
 import com.querydsl.jpa.impl.JPAQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import kr.tour.travelogue.domain.Travelogue;
@@ -11,6 +13,7 @@ import kr.tour.travelogue.domain.search.SearchCondition;
 import kr.tour.travelogue.domain.search.SearchType;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Repository;
@@ -27,6 +30,9 @@ import static kr.tour.travelogue.domain.QTravelogueTag.travelogueTag;
 @Repository
 public class TravelogueQueryRepositoryImpl implements TravelogueQueryRepository{
 
+  public static final String BLANK = " ";
+  public static final String EMPTY = "";
+  public static final String TEMPLATE = "replace({0}, ' ', '')";
 
   private final JPAQueryFactory jpaQueryFactory;
   @Override
@@ -45,7 +51,7 @@ public class TravelogueQueryRepositoryImpl implements TravelogueQueryRepository{
             .limit(pageable.getPageSize())
             .fetch();
 
-    return null;
+    return new PageImpl<>(results, pageable, results.size());
   }
 
 
@@ -56,7 +62,25 @@ public class TravelogueQueryRepositoryImpl implements TravelogueQueryRepository{
     if (condition.getSearchType() == SearchType.COUNTRY) {
       CountryCode countryCode = CountryCode.findByName(keyword);
       findByCountryCode(baseQuery, countryCode);
+      return;
     }
+
+    if (condition.getSearchType() == SearchType.AUTHOR || condition.getSearchType() == SearchType.TITLE) {
+      findByTitleOrAuthor(condition, baseQuery, keyword);
+    }
+  }
+
+  private void findByTitleOrAuthor(SearchCondition condition, JPAQuery<Travelogue> baseQuery, String keyword) {
+    baseQuery.where(Expressions.stringTemplate(TEMPLATE, getTargetField(condition.getSearchType()))
+                    .containsIgnoreCase(keyword.replace(BLANK, EMPTY)))
+            .orderBy(travelogueTag.id.desc());
+  }
+
+  private StringPath getTargetField(SearchType searchType) {
+    if (SearchType.AUTHOR.equals(searchType)) {
+      return travelogue.author.nickname;
+    }
+    return travelogue.title;
   }
 
   private void findByCountryCode(JPAQuery<Travelogue> baseQuery, CountryCode countryCode) {

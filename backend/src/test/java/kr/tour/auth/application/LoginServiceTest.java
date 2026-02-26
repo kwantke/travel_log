@@ -4,25 +4,23 @@ import kr.tour.auth.dto.response.LoginResponse;
 import kr.tour.auth.dto.response.TokenResponse;
 import kr.tour.auth.fixture.OauthUserInformationFixture;
 import kr.tour.auth.infrastructure.KakaoOauthProvider;
+import kr.tour.global.fixture.ServiceTest;
 import kr.tour.global.config.JwtTokenProvider;
 import kr.tour.member.domain.Member;
 import kr.tour.member.fixture.MemberFixture;
 import kr.tour.member.infrastructure.MemberRepository;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.test.context.ActiveProfiles;
 import java.util.Optional;
+
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 
 
-@ActiveProfiles("fake-test")
-@ExtendWith(MockitoExtension.class)
+@ServiceTest
 class LoginServiceTest {
   private static final String AUTHENTICATION_CODE = "test-authentication-code";
   private static final String REDIRECT_URI = "http%3A%2F%2Flocalhost%3A8080%2Fapi%2Fv1%2Flogin%2Foauth%2Fkakao";

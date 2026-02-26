@@ -1,7 +1,9 @@
 package kr.tour.travelogue.application;
 
+import kr.tour.global.exception.CoreException;
 import kr.tour.travelogue.domain.Travelogue;
 import kr.tour.travelogue.domain.TravelogueFilterCondition;
+import kr.tour.travelogue.domain.exception.TravelogueErrorCode;
 import kr.tour.travelogue.domain.search.SearchCondition;
 import kr.tour.travelogue.infrastructure.TravelogueRepository;
 import kr.tour.travelogue.infrastructure.query.TravelogueQueryRepository;
@@ -33,4 +35,13 @@ public class TravelogueService {
     return travelogueQueryRepository.findAllByCondition(searchCondition, filter, pageable);
   }
 
+  public Travelogue save(Travelogue travelogue) {
+    return travelogueRepository.save(travelogue);
+  }
+
+
+  public Travelogue getTravelogueById(Long id) {
+    return travelogueRepository.findById(id)
+            .orElseThrow(() -> new CoreException(TravelogueErrorCode.INVALID_TRAVELOGUE));
+  }
 }

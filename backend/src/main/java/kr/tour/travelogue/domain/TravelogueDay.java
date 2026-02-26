@@ -33,5 +33,23 @@ public class TravelogueDay extends AuditingFields {
   @OneToMany(mappedBy = "travelogueDay", cascade = CascadeType.ALL, orphanRemoval = true)
   private List<TraveloguePlace> traveloguePlaces = new ArrayList<>();
 
+  public TravelogueDay(Object o, Integer order, Travelogue travelogue) {
+    this.id = id;
+    this.order = order;
+    this.travelogue = travelogue;
+  }
 
+  public TravelogueDay(Integer order, Travelogue travelogue) {
+    this(null, order, travelogue);
+  }
+
+
+  public void addPlace(TraveloguePlace traveloguePlace) {
+    traveloguePlaces.add(traveloguePlace);
+    traveloguePlace.updateTravelogueDay(this);
+  }
+
+  public void updateTravelogue(Travelogue travelogue) {
+    this.travelogue = travelogue;
+  }
 }

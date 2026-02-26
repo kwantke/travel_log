@@ -1,0 +1,42 @@
+spring:
+  config:
+    activate:
+      on-profile: dev
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://${MYSQL_ENDPOINT}:${MYSQL_PORT}/${MYSQL_DATABASE}?rewriteBatchedStatements=true&serverTimezone=Asia/Seoul&characterEncoding=UTF-8
+    username: ${MYSQL_USERNAME}
+    password: ${MYSQL_PASSWORD}
+  jpa:
+    show-sql: true
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.MySQLDialect
+        format_sql: true
+    hibernate:
+      ddl-auto: validate
+
+jwt:
+  token:
+    secret-key: ${JWT_ACCESS_SECRET_KEY}
+    expire-length: ${JWT_ACCESS_EXPIRATION}
+  refresh:
+    secret-key: ${JWT_REFRESH_SECRET_KEY}
+    expire-length: ${JWT_REFRESH_EXPIRATION}
+
+oauth:
+  kakao:
+    user-information-request-uri: https://kapi.kakao.com/v2/user/me
+    access-token-request-uri: https://kauth.kakao.com/oauth/token
+    rest-api-key: ${KAKAO_REST_API_KEY}
+    client-secret: ${KAKAO_CLIENT_SECRET}
+
+
+cloud:
+  aws:
+    s3:
+      bucket: ${S3_BUCKET}
+      image-base-uri: https://dev.tour.kr/
+      origin-storage-path: tour/
+      temporary-storage-path: temporary/
+      image-storage-path: images/

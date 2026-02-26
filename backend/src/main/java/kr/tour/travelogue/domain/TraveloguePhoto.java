@@ -30,4 +30,24 @@ public class TraveloguePhoto extends AuditingFields {
   @JoinColumn(nullable = false)
   @ManyToOne(fetch = FetchType.LAZY)
   private TraveloguePlace traveloguePlace;
+
+  public TraveloguePhoto(Long id, Integer order, String key, TraveloguePlace traveloguePlace) {
+    this.id = id;
+    this.key = key;
+    this.order = order;
+    this.traveloguePlace = traveloguePlace;
+  }
+
+  public TraveloguePhoto(Integer order, String key, TraveloguePlace traveloguePlace) {
+    this(null, order, key, traveloguePlace);
+  }
+
+
+  public void updateTraveloguePlace(TraveloguePlace traveloguePlace) {
+    this.traveloguePlace = traveloguePlace;
+  }
+
+  public void updateKey(String key) {
+    this.key = key;
+  }
 }
