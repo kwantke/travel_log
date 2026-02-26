@@ -8,6 +8,7 @@ import kr.tour.travelogue.dto.request.TravelogueFilterRequest;
 import kr.tour.travelogue.dto.request.TravelogueRequest;
 import kr.tour.travelogue.dto.request.TravelogueSearchRequest;
 import kr.tour.travelogue.dto.response.TravelogueCreateResponse;
+import kr.tour.travelogue.dto.response.TravelogueResponse;
 import kr.tour.travelogue.dto.response.TravelogueSimpleResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -52,6 +53,12 @@ public class TravelogueController {
           ) {
     TravelogueCreateResponse response = travelogueFacadeService.createTravelogue(member, request);
     return ResponseEntity.created(URI.create("/api/v1/travelogues/" + response.id())).build();
+  }
+
+
+  @GetMapping("/{id")
+  public ResponseEntity<TravelogueResponse> findTravelogue(@PathVariable Long id) {
+    return ResponseEntity.ok(travelogueFacadeService.findTravelogueByIdForGuest(id));
   }
 
 }

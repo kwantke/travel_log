@@ -5,12 +5,12 @@ import kr.tour.member.application.MemberService;
 import kr.tour.member.domain.Member;
 import kr.tour.travelogue.domain.Travelogue;
 import kr.tour.travelogue.domain.TravelogueFilterCondition;
-import kr.tour.travelogue.domain.TravelogueTag;
 import kr.tour.travelogue.domain.search.SearchCondition;
 import kr.tour.travelogue.dto.request.TravelogueFilterRequest;
 import kr.tour.travelogue.dto.request.TravelogueRequest;
 import kr.tour.travelogue.dto.request.TravelogueSearchRequest;
 import kr.tour.travelogue.dto.response.TravelogueCreateResponse;
+import kr.tour.travelogue.dto.response.TravelogueResponse;
 import kr.tour.travelogue.dto.response.TravelogueSimpleResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -52,5 +52,11 @@ public class TravelogueFacadeService {
     return TravelogueCreateResponse.from(travelogue);
   }
 
+
+  public TravelogueResponse findTravelogueByIdForGuest(Long id) {
+    Travelogue travelogue = travelogueService.getTravelogueById(id);
+
+    return TravelogueResponse.createResponseForGuest(travelogue);
+  }
 
 }
