@@ -56,7 +56,7 @@ public class TravelogueController {
   }
 
 
-  @GetMapping("/{id")
+  @GetMapping("/{id}")
   public ResponseEntity<TravelogueResponse> findTravelogue(@PathVariable Long id) {
     return ResponseEntity.ok(travelogueFacadeService.findTravelogueByIdForGuest(id));
   }
