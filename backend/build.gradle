@@ -38,6 +38,9 @@ dependencies {
   // Mysql
   runtimeOnly 'com.mysql:mysql-connector-j'
 
+  // Flyway 추가
+  implementation 'org.flywaydb:flyway-mysql'
+
   // Jwt
   implementation 'io.jsonwebtoken:jjwt-api:0.11.5'
   runtimeOnly 'io.jsonwebtoken:jjwt-impl:0.11.5'
