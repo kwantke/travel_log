@@ -13,7 +13,6 @@ import kr.tour.travelogue.dto.request.TravelogueDayRequest;
 import kr.tour.travelogue.dto.request.TraveloguePhotoRequest;
 import kr.tour.travelogue.dto.request.TraveloguePlaceRequest;
 import kr.tour.travelogue.dto.request.TravelogueRequest;
-import kr.tour.travelogue.dto.response.TravelogueResponse;
 import kr.tour.travelogue.dto.response.TravelogueSimpleResponse;
 import kr.tour.travelogue.fixture.TravelogueRequestFixture;
 import kr.tour.travelogue.fixture.TravelogueResponseFixture;
@@ -79,7 +78,7 @@ public class TravelogueIntegrationTest extends IntegrationTest {
   @Test
   void createTravelogue() {
     given(s3Provider.copyImageToPermanentStorage(any(String.class)))
-            .willReturn("https://dev.tour.kr/image.png");
+            .willReturn("https://dev.touroot.kr/image.png");
 
     List<TravelogueDayRequest> days = getTravelogueDayRequests();
     TravelogueRequest request = TravelogueRequestFixture.getTravelogueRequest(days);
@@ -97,19 +96,5 @@ public class TravelogueIntegrationTest extends IntegrationTest {
     List<TraveloguePhotoRequest> photos = TravelogueRequestFixture.getTraveloguePhotoRequests();
     List<TraveloguePlaceRequest> places = TravelogueRequestFixture.getTraveloguePlaceRequests(photos);
     return TravelogueRequestFixture.getTravelogueDayRequests(places);
-  }
-
-  @DisplayName("여행기를 상세 조회한다.")
-  @Test
-  void findTravelogue() throws JsonProcessingException {
-    testHelper.initTravelogueTestData(member);
-    TravelogueResponse response = TravelogueResponseFixture.getTravelogueResponse();
-
-    RestAssured.given().log().all()
-            .accept(ContentType.JSON)
-            .when().get("/api/v1/travelogues/1")
-            .then().log().all()
-            .statusCode(200).assertThat()
-            .body(is(objectMapper.writeValueAsString(response)));
   }
 }

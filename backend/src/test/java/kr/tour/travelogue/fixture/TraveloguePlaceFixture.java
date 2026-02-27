@@ -10,7 +10,7 @@ import static kr.tour.travelogue.fixture.TravelogueDayFixture.TRAVELOGUE_DAY;
 @Getter
 @RequiredArgsConstructor
 public enum TraveloguePlaceFixture {
-  TRAVELOGUE_PLACE(1, "에메랄드 빛 해변", "광안리 해수욕장", "34.54343", "126.66977", TRAVELOGUE_DAY.get(), "KR"),
+  TRAVELOGUE_PLACE(1, "에메발드 빛 해변", "광안리 해수욕장", "34.54343", "126.66977", TRAVELOGUE_DAY.get(), "KR"),
   ;
 
   private final int order;

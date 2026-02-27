@@ -30,15 +30,6 @@ public class TravelogueTestHelper extends DbHelper {
     persistTravelogueLike(travelogue, author);
   }
 
-  public Travelogue initTravelogueTestData(Member author) {
-    Travelogue travelogue = persistTravelogue(author);
-    TravelogueDay day = persistTravelogueDay(travelogue);
-    TraveloguePlace place = persistTraveloguePlace(day);
-    persistTravelogueCountry(travelogue);
-    persistTraveloguePhoto(place);
-    return travelogue;
-  }
-
   private Travelogue initTravelogueTestDataWithTag(Member author) {
     Travelogue travelogue = persistTravelogue(author);
     TravelogueDay day = persistTravelogueDay(travelogue);
@@ -102,17 +93,16 @@ public class TravelogueTestHelper extends DbHelper {
     return day;
   }
 
+  private Travelogue initTravelogueTestData(Member author) {
+    Travelogue travelogue = persistTravelogue(author);
+
+    return travelogue;
+  }
 
   private Travelogue persistTravelogue(Member author) {
     Travelogue travelogue = TravelogueFixture.TRAVELOGUE.create(author);
     em.persist(travelogue);
     em.flush();
-    return travelogue;
-  }
-
-  public Travelogue initTravelogueTestDataWithLike(Member liker) {
-    Travelogue travelogue = initTravelogueTestData(liker);
-    persistTravelogueLike(travelogue, liker);
     return travelogue;
   }
 }

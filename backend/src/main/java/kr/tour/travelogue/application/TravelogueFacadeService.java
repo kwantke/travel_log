@@ -10,7 +10,6 @@ import kr.tour.travelogue.dto.request.TravelogueFilterRequest;
 import kr.tour.travelogue.dto.request.TravelogueRequest;
 import kr.tour.travelogue.dto.request.TravelogueSearchRequest;
 import kr.tour.travelogue.dto.response.TravelogueCreateResponse;
-import kr.tour.travelogue.dto.response.TravelogueLikeResponse;
 import kr.tour.travelogue.dto.response.TravelogueResponse;
 import kr.tour.travelogue.dto.response.TravelogueSimpleResponse;
 import lombok.RequiredArgsConstructor;
@@ -27,10 +26,8 @@ public class TravelogueFacadeService {
   private final TravelogueTagService travelogueTagService;
   private final TravelogueCountryService travelogueCountryService;
   private final TravelogueImagePerpetuationService travelogueImagePerpetuationService;
-  private final TravelogueLikeService travelogueLikeService;
   private final MemberService memberService;
 
-  @Transactional(readOnly = true)
   public Page<TravelogueSimpleResponse> findSimpleTravelogues(
           TravelogueFilterRequest filterRequest,
           TravelogueSearchRequest searchRequest,
@@ -62,21 +59,4 @@ public class TravelogueFacadeService {
     return TravelogueResponse.createResponseForGuest(travelogue);
   }
 
-  @Transactional(readOnly = true)
-  public TravelogueResponse findTravelogueByIdForAuthenticated(Long id, MemberAuth member) {
-    Member accessor = memberService.getMemberById(member.memberId());
-    Travelogue travelogue = travelogueService.getTravelogueById(id);
-    boolean likeFromAccessor = travelogueLikeService.existByTravelogueAndMember(travelogue, accessor);
-
-    return TravelogueResponse.of(travelogue, likeFromAccessor);
-  }
-
-  @Transactional
-  public TravelogueLikeResponse likeTravelogue(Long travelogueId, MemberAuth member) {
-    Travelogue travelogue = travelogueService.getTravelogueById(travelogueId);
-    Member liker = memberService.getMemberById(member.memberId());
-    travelogueLikeService.likeTravelogue(travelogue, liker);
-
-    return new TravelogueLikeResponse(true, travelogue.getLikeCount());
-  }
 }

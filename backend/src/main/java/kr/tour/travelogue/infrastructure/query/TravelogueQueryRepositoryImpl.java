@@ -73,7 +73,7 @@ public class TravelogueQueryRepositoryImpl implements TravelogueQueryRepository{
   private void findByTitleOrAuthor(SearchCondition condition, JPAQuery<Travelogue> baseQuery, String keyword) {
     baseQuery.where(Expressions.stringTemplate(TEMPLATE, getTargetField(condition.getSearchType()))
                     .containsIgnoreCase(keyword.replace(BLANK, EMPTY)))
-            .orderBy(travelogue.id.desc());
+            .orderBy(travelogueTag.id.desc());
   }
 
   private StringPath getTargetField(SearchType searchType) {
@@ -117,7 +117,6 @@ public class TravelogueQueryRepositoryImpl implements TravelogueQueryRepository{
       Order direction = sortOrder.isAscending() ? Order.ASC : Order.DESC;
 
       switch (property) {
-        case "id" -> orders.add(new OrderSpecifier<>(direction, travelogue.id));
         case "createdAt" -> orders.add(new OrderSpecifier<>(direction, travelogue.createdAt));
         case "likeCount" -> orders.add(new OrderSpecifier<>(direction, travelogue.likeCount));
         default -> {
