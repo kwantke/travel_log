@@ -15,7 +15,10 @@ jobs:
   build:
     name: Build and Upload Artifact
     runs-on: ubuntu-latest
-    
+    defaults:
+      run:
+        working-directory: ./backend
+        
     services:
       mysql:
         image: mysql:8.0
@@ -57,7 +60,6 @@ jobs:
         uses: gradle/actions/setup-gradle@v3
 
       - name: Build executable Spring Boot jar
-        working-directory: backend
         run: ./gradlew clean bootJar
 
       - name: DockerHub Login
