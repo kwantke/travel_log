@@ -21,7 +21,6 @@ EXPOSE 8080
 ARG ENVIRONMENT=dev
 
 # 8. 빌드 시 받은 값을 컨테이너 내부의 '환경 변수'로 고정
-# 스프링 부트가 이 이름을 보고 프로필을 결정합니다.
 ENV SPRING_PROFILES_ACTIVE=${ENVIRONMENT}
 
 ENTRYPOINT ["java", "-Djava.security.egd=file:/dev/./urandom", "-jar", "app.jar"]
