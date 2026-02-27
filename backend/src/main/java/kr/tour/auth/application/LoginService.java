@@ -6,7 +6,11 @@ import kr.tour.auth.dto.response.OauthUserInformationResponse;
 import kr.tour.auth.infrastructure.KakaoOauthProvider;
 import kr.tour.global.config.JwtTokenProvider;
 import kr.tour.global.exception.CoreException;
+import kr.tour.global.log.logger.JsonLogger;
+import kr.tour.global.log.property.auth.LoginLogProperty;
+import kr.tour.global.log.property.auth.SignUpLogProperty;
 import kr.tour.member.domain.Member;
+import kr.tour.member.domain.enums.LoginType;
 import kr.tour.member.domain.exception.MemberErrorCode;
 import kr.tour.member.infrastructure.MemberRepository;
 import lombok.RequiredArgsConstructor;
@@ -23,6 +27,8 @@ import java.nio.charset.StandardCharsets;
 @RequiredArgsConstructor
 public class LoginService {
 
+  private final JsonLogger jsonLogger;
+
   private final MemberRepository memberRepository;
   private final JwtTokenProvider jwtTokenProvider;
   private final KakaoOauthProvider kakaoOauthProvider;
@@ -35,6 +41,8 @@ public class LoginService {
             .orElseThrow(() -> new CoreException(MemberErrorCode.INVALID_MEMBER_INFO));
 
     validatePassword(request, member);
+
+    jsonLogger.info(LoginLogProperty.successLocal(member));
     return LoginResponse.of(member, jwtTokenProvider.createToken(member.getId()));
   }
 
@@ -50,10 +58,14 @@ public class LoginService {
     Member member = memberRepository.findByKakaoId(userInfo.socialLoginId())
             .orElseGet(() -> signUp(userInfo));
 
+    jsonLogger.info(LoginLogProperty.successOAuth(member, LoginType.KAKAO));
     return LoginResponse.of(member, jwtTokenProvider.createToken(member.getId()));
   }
 
   private Member signUp(OauthUserInformationResponse userInfo) {
+    Member savedMember = memberRepository.save(userInfo.toMember());
+
+    jsonLogger.info(SignUpLogProperty.ofOAuth(savedMember, LoginType.KAKAO));
     return memberRepository.save(userInfo.toMember());
   }
 }
