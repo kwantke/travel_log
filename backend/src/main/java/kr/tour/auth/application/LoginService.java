@@ -14,7 +14,6 @@ import kr.tour.member.domain.enums.LoginType;
 import kr.tour.member.domain.exception.MemberErrorCode;
 import kr.tour.member.infrastructure.MemberRepository;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -22,7 +21,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.net.URLDecoder;
 import java.nio.charset.StandardCharsets;
 
-@Slf4j
+
 @Service
 @RequiredArgsConstructor
 public class LoginService {

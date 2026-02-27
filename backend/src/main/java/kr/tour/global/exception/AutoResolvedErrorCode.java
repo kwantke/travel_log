@@ -4,6 +4,15 @@ import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 
+/**
+ * Spring의 {@link org.springframework.web.servlet.mvc.support.DefaultHandlerExceptionResolver}에 의해 자동으로 처리되는 HTTP 상태 코드를
+ * 나타내는 열거형이다.
+ * <p>
+ * {@code DefaultHandlerExceptionResolver}는 Spring MVC 요청 처리 과정 중 발생하는 일부 표준 예외를 가로채어, 예외를 다시 던지지 않고 적절한
+ * {@link org.springframework.http.HttpStatus} 응답 코드로 변환한다.
+ * <p>
+ * 이 enum은 위와 같은 Spring 내부 자동 변환 예외들을 통합적으로 관리하고 로그 처리 시 일관된 형태로 사용할 수 있도록 정의된다.
+ */
 @Getter
 @RequiredArgsConstructor
 public enum AutoResolvedErrorCode implements ErrorCode{
