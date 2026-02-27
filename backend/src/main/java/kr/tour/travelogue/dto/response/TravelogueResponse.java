@@ -2,6 +2,7 @@ package kr.tour.travelogue.dto.response;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import kr.tour.travelogue.domain.Travelogue;
+import kr.tour.travelogue.domain.TravelogueDay;
 import kr.tour.travelogue.domain.TravelogueTag;
 import lombok.Builder;
 
@@ -18,14 +19,16 @@ public record TravelogueResponse(
         Long authorId,
         @Schema(description = "작성자 닉네임", example = "지니")
         String authorNickname,
-        @Schema(description = "작성자 프로필 사진 URL", example = "https://dev.touroot.kr/images/profile.png")
+        @Schema(description = "작성자 프로필 사진 URL", example = "https://dev.tour.kr/images/profile.png")
         String authorProfileImageUrl,
-        @Schema(description = "여행기 썸네일 링크", example = "https://dev.touroot.kr/images/thumbnail.png")
+        @Schema(description = "여행기 썸네일 링크", example = "https://dev.tour.kr/images/thumbnail.png")
         String thumbnail,
         @Schema(description = "작성 날짜")
         LocalDate createdAt,
         @Schema(description = "여행기 태그")
         List<TagResponse> tags,
+        @Schema(description = "여행기 일자 목록")
+        List<TravelogueDayResponse> days,
 
         @Schema(description = "여행기 좋아요 숫자", example = "10")
         Long likeCount,
@@ -33,8 +36,8 @@ public record TravelogueResponse(
         Boolean isLiked
 ) {
 
-  public static TravelogueResponse of(Travelogue travelogue, List<TravelogueTag> tags, boolean isLikedFromAccessor) {
-    return baseBuilder(travelogue, tags)
+  public static TravelogueResponse of(Travelogue travelogue, boolean isLikedFromAccessor) {
+    return baseBuilder(travelogue, travelogue.getTravelogueTags())
             .isLiked(isLikedFromAccessor)
             .build();
   }
@@ -58,9 +61,15 @@ public record TravelogueResponse(
             .title(travelogue.getTitle())
             .thumbnail(travelogue.getThumbnail())
             .tags(getTagResponse(tags))
+            .days(getTravelogueDayResponse(travelogue.getTravelogueDays()))
             .likeCount(travelogue.getLikeCount());
   }
 
+  private static List<TravelogueDayResponse> getTravelogueDayResponse(List<TravelogueDay> travelogueDays) {
+    return travelogueDays.stream()
+            .map(TravelogueDayResponse::from)
+            .toList();
+  }
 
   private static List<TagResponse> getTagResponse(List<TravelogueTag> travelogueTags) {
     return travelogueTags.stream()
