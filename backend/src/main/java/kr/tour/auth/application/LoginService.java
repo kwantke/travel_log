@@ -61,10 +61,11 @@ public class LoginService {
     return LoginResponse.of(member, jwtTokenProvider.createToken(member.getId()));
   }
 
-  private Member signUp(OauthUserInformationResponse userInfo) {
+  @Transactional
+  public Member signUp(OauthUserInformationResponse userInfo) {
     Member savedMember = memberRepository.save(userInfo.toMember());
 
     jsonLogger.info(SignUpLogProperty.ofOAuth(savedMember, LoginType.KAKAO));
-    return memberRepository.save(userInfo.toMember());
+    return savedMember;
   }
 }
