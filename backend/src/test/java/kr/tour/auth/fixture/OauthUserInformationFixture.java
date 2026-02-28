@@ -7,6 +7,6 @@ import kr.tour.auth.dto.response.kakao.KakaoProfile;
 public class OauthUserInformationFixture {
 
   public static final OauthUserInformationResponse OAUTH_USER_1_INFORMATION = new OauthUserInformationResponse(
-          1L, new KakaoAccount(new KakaoProfile("리비", "http://img-url.com"))
+          1L, new KakaoAccount(new KakaoProfile("테스터", "https://dev.tour.kr/temporary/profile.png"))
   );
 }

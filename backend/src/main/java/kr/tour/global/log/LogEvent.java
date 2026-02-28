@@ -16,8 +16,12 @@ public enum LogEvent {
   SIGNUP("Auth_Signup"),
   LOGIN("Auth_Login"),
   TOKEN_REFRESH("Auth_Token_Refresh"),
-  WITHDRAWAL("Auth_Withdrawal");
+  WITHDRAWAL("Auth_Withdrawal"),
 
+  /* db log event */
+  DB_SLOW_QUERY("DB_SlowQuery"),
+  DB_ERROR("DB_Error"),
+  ;
 
   private final String eventName;
 }
