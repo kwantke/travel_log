@@ -39,4 +39,11 @@ public class TravelogueCountryService {
             .collect(Collectors.groupingBy(Function.identity(), Collectors.counting()));
   }
 
+  public void updateTravelogueCountries(Travelogue travelogue, TravelogueRequest request) {
+    deleteAllByTravelogue(travelogue);
+  }
+  @Transactional
+  public void deleteAllByTravelogue(Travelogue travelogue) {
+    travelogueCountryRepository.deleteAllByTravelogue(travelogue);
+  }
 }

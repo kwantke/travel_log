@@ -60,6 +60,26 @@ public class Travelogue extends AuditingFields {
     travelogueDays.add(travelogueDay);
 
   }
+  public void updateDays(List<TravelogueDay> travelogueDays) {
+    this.travelogueDays.clear();
+    travelogueDays.forEach(this::addDay);
+  }
+
+  public void update(String title, String thumbnail) {
+    this.title = title;
+    this.thumbnail = thumbnail;
+  }
+
+  public void updateTravelogueTag(List<TravelogueTag> travelogueTags) {
+    this.travelogueTags.clear();
+    travelogueTags.forEach(this::addTag);
+
+  }
+
+  private void addTag(TravelogueTag travelogueTag) {
+    travelogueTag.updateTravelogue(this);
+    travelogueTags.add(travelogueTag);
+  }
 
   public void updateThumbnail(String thumbnail) {
     this.thumbnail = thumbnail;
@@ -79,5 +99,14 @@ public class Travelogue extends AuditingFields {
 
   public void increaseLikeCount() {
     likeCount += LIKE_COUNT_WEIGHT;
+  }
+
+  public boolean isAuthor(Member author) {
+    return author.getId() == this.author.getId();
+  }
+
+
+  public void decreaseLikeCount() {
+    likeCount -= LIKE_COUNT_WEIGHT;
   }
 }

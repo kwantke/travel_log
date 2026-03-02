@@ -3,8 +3,10 @@ package kr.tour.travelogue.application;
 import kr.tour.global.dto.MemberAuth;
 import kr.tour.member.application.MemberService;
 import kr.tour.member.domain.Member;
+import kr.tour.recommand.application.RecommendationService;
 import kr.tour.travelogue.domain.Travelogue;
 import kr.tour.travelogue.domain.TravelogueFilterCondition;
+import kr.tour.travelogue.domain.TravelogueTag;
 import kr.tour.travelogue.domain.search.SearchCondition;
 import kr.tour.travelogue.dto.request.TravelogueFilterRequest;
 import kr.tour.travelogue.dto.request.TravelogueRequest;
@@ -19,6 +21,8 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+
 @RequiredArgsConstructor
 @Service
 public class TravelogueFacadeService {
@@ -29,6 +33,7 @@ public class TravelogueFacadeService {
   private final TravelogueImagePerpetuationService travelogueImagePerpetuationService;
   private final TravelogueLikeService travelogueLikeService;
   private final MemberService memberService;
+  //private final RecommendationService recommendationService;
 
   @Transactional(readOnly = true)
   public Page<TravelogueSimpleResponse> findSimpleTravelogues(
@@ -68,6 +73,7 @@ public class TravelogueFacadeService {
     Travelogue travelogue = travelogueService.getTravelogueById(id);
     boolean likeFromAccessor = travelogueLikeService.existByTravelogueAndMember(travelogue, accessor);
 
+    //recommendationService.saveUserRecommendTag(member.memberId(), travelogue.getTravelogueTags());
     return TravelogueResponse.of(travelogue, likeFromAccessor);
   }
 
@@ -78,5 +84,39 @@ public class TravelogueFacadeService {
     travelogueLikeService.likeTravelogue(travelogue, liker);
 
     return new TravelogueLikeResponse(true, travelogue.getLikeCount());
+  }
+
+  @Transactional
+  public TravelogueResponse updateTravelogue(Long id, MemberAuth member, TravelogueRequest updateRequest) {
+    Member author = memberService.getMemberById(member.memberId());
+
+    Travelogue updated = travelogueService.update(id, author, updateRequest);
+    travelogueImagePerpetuationService.copyTravelogueImagesToPermanentStorage(updated);
+    List<TravelogueTag> travelogueTags = travelogueTagService.updateTravelogueTag(updated, updateRequest.tags());
+    travelogueCountryService.updateTravelogueCountries(updated, updateRequest);
+    updated.updateTravelogueTag(travelogueTags);
+    boolean isLikedFromAccessor = travelogueLikeService.existByTravelogueAndMember(updated, author);
+    return  TravelogueResponse.of(updated, isLikedFromAccessor);
+
+  }
+  @Transactional
+  public void deleteTravelogueById(Long id, MemberAuth member) {
+    Member author = memberService.getMemberById(member.memberId());
+    Travelogue travelogue = travelogueService.getTravelogueById(id);
+
+    travelogueTagService.deleteAllByTravelogue(travelogue);
+    travelogueLikeService.deleteAllByTravelogue(travelogue);
+    travelogueCountryService.deleteAllByTravelogue(travelogue);
+    travelogueService.delete(travelogue, author);
+
+  }
+
+  @Transactional
+  public TravelogueLikeResponse unlikeTravelogue(Long travelogueId, MemberAuth member) {
+    Travelogue travelogue = travelogueService.getTravelogueById(travelogueId);
+    Member liker = memberService.getMemberById(member.memberId());
+    travelogueLikeService.unlikeTravelogue(travelogue, liker);
+
+    return new TravelogueLikeResponse(false, travelogue.getLikeCount());
   }
 }
