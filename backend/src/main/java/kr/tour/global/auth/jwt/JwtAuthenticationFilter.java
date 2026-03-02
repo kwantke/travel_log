@@ -6,6 +6,7 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import kr.tour.global.config.JwtTokenProvider;
+import kr.tour.global.dto.HttpRequestInfo;
 import kr.tour.global.dto.MemberAuth;
 import kr.tour.global.exception.ExceptionResponse;
 import kr.tour.global.log.logger.ConsoleLogger;
@@ -25,11 +26,10 @@ import java.util.List;
 @RequiredArgsConstructor
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
-    public static final String MEMBER_ID_ATTRIBUTE = "memberId";
     private final ConsoleLogger consoleLogger;
 
-    private final AntPathMatcher pathMatcher = new AntPathMatcher();
-    private final List<String> whitelist;
+
+    private final List<HttpRequestInfo> whiteList;
     private final ObjectMapper objectMapper;
     private final JwtTokenProvider jwtTokenProvider;
 
@@ -44,10 +44,14 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             return;
         }
 
+        if (isTokenBlank(token)) {
+            sendUnauthorizedResponse(response, "로그인을 해주세요.");
+            return;
+        }
+
         try {
             String memberId = jwtTokenProvider.decodeAccessToken(token);
             authenticateAsMember(memberId);
-            request.setAttribute(MEMBER_ID_ATTRIBUTE, memberId);
             filterChain.doFilter(request, response);
         } catch (Exception e) {
             sendUnauthorizedResponse(response, e.getMessage());
@@ -62,8 +66,12 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     }
 
     private boolean isWhitelisted(HttpServletRequest request) {
-        String path = request.getRequestURI();
-        return whitelist.stream().anyMatch(pattern -> pathMatcher.match(pattern, path));
+        String method = request.getMethod();
+        String url = request.getRequestURI();
+        AntPathMatcher antPathMatcher = new AntPathMatcher();
+
+        return whiteList.stream()
+                .anyMatch(white -> white.method().matches(method) && antPathMatcher.match(white.urlPattern(), url));
     }
 
     private void authenticateAsMember(String memberId) {
@@ -86,5 +94,9 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         response.setHeader(HttpHeaders.ACCESS_CONTROL_ALLOW_ORIGIN, "*");
         response.getWriter()
                 .write(objectMapper.writeValueAsString(errorResponse));
+    }
+
+    private boolean isTokenBlank(String token) {
+        return token == null || token.isBlank();
     }
 }
