@@ -121,6 +121,8 @@ class TravelogueControllerTest extends ControllerTest {
             fieldWithPath("title").type(JsonFieldType.STRING).description("여행기 제목"),
             fieldWithPath("thumbnail").type(JsonFieldType.STRING).description("썸네일 이미지 URL"),
             fieldWithPath("tags").type(JsonFieldType.ARRAY).description("태그 목록 (빈 배열 가능)"),
+            //fieldWithPath("tags[].id").type(JsonFieldType.STRING).description("태그 목록 (빈 배열 가능)"),
+            //fieldWithPath("tags[].tag").type(JsonFieldType.STRING).description("태그 목록 (빈 배열 가능)"),
 
             // days 배열 관련
             fieldWithPath("days").type(JsonFieldType.ARRAY).description("날짜별 일정 목록"),

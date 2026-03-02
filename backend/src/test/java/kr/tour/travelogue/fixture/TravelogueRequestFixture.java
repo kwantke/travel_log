@@ -43,4 +43,52 @@ public class TravelogueRequestFixture {
             days
     );
   }
+
+  public static TravelogueRequest getTravelogueRequest(List<TravelogueDayRequest> days, List<Long> tags) {
+    return new TravelogueRequest(
+            "부산 여행지",
+            "https://dev.touroot.kr/temporary/jeju_thumbnail.png",
+            tags,
+            days
+    );
+  }
+
+  public static List<TraveloguePhotoRequest> getTraveloguePhotoRequestsOverLimit() {
+    return List.of(
+            new TraveloguePhotoRequest("https://dev.touroot.kr/temporary/image1.png"),
+            new TraveloguePhotoRequest("https://dev.touroot.kr/temporary/image2.png"),
+            new TraveloguePhotoRequest("https://dev.touroot.kr/temporary/image3.png"),
+            new TraveloguePhotoRequest("https://dev.touroot.kr/temporary/image4.png"),
+            new TraveloguePhotoRequest("https://dev.touroot.kr/temporary/image5.png"),
+            new TraveloguePhotoRequest("https://dev.touroot.kr/temporary/image6.png"),
+            new TraveloguePhotoRequest("https://dev.touroot.kr/temporary/image7.png"),
+            new TraveloguePhotoRequest("https://dev.touroot.kr/temporary/image8.png"),
+            new TraveloguePhotoRequest("https://dev.touroot.kr/temporary/image9.png"),
+            new TraveloguePhotoRequest("https://dev.touroot.kr/temporary/image10.png"),
+            new TraveloguePhotoRequest("https://dev.touroot.kr/temporary/image11.png")
+    );
+  }
+
+  public static List<TraveloguePlaceRequest> getUpdateTraveloguePlaceRequests(List<TraveloguePhotoRequest> photos) {
+    return List.of(new TraveloguePlaceRequest(
+            "함덕 해수욕장",
+            getTraveloguePositionRequest(),
+            "에메랄드 빛 해변은 해외 휴양지와 견줘도 밀리지 않습니다.",
+            photos,
+            "KR"
+    ));
+  }
+
+  public static List<TravelogueDayRequest> getUpdateTravelogueDayRequests(List<TraveloguePlaceRequest> places) {
+    return List.of(new TravelogueDayRequest(places), new TravelogueDayRequest(places));
+  }
+
+  public static TravelogueRequest getUpdateTravelogueRequest(List<TravelogueDayRequest> days) {
+    return new TravelogueRequest(
+            "삼춘! 제주에 하영 옵서!",
+            "https://dev.touroot.kr/temporary/jeju_thumbnail_2.png",
+            List.of(),
+            days
+    );
+  }
 }

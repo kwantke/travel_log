@@ -174,4 +174,70 @@ public class TravelogueFacadeServiceTest {
     List<TraveloguePlaceRequest> places = TravelogueRequestFixture.getTraveloguePlaceRequests(photos);
     return TravelogueRequestFixture.getTravelogueDayRequests(places);
   }
+
+  @DisplayName("사용자 닉네임을 기반으로 여행기 목록을 조회한다.")
+  @Test
+  void findTraveloguesByAuthorNicknameKeyword() {
+    // given
+    testHelper.initAllTravelogueTestData();
+    Page<TravelogueSimpleResponse> responses = TravelogueResponseFixture.getTravelogueSimpleResponses();
+
+    TravelogueSearchRequest searchRequest = new TravelogueSearchRequest("테스터", "author");
+    TravelogueFilterRequest filterRequest = new TravelogueFilterRequest(null, null);
+    PageRequest pageRequest = PageRequest.of(0, 5, Sort.by("id"));
+
+    // when
+    Page<TravelogueSimpleResponse> searchResults = service.findSimpleTravelogues(
+            filterRequest,
+            searchRequest,
+            pageRequest
+    );
+
+    // then
+    assertThat(searchResults).containsAll(responses);
+  }
+
+  @DisplayName("국가 코드를 기반으로 여행기 목록을 조회한다.")
+  @Test
+  void findTraveloguesByCountryCodeKeyword() {
+    // given
+    testHelper.initAllTravelogueTestData();
+    Page<TravelogueSimpleResponse> responses = TravelogueResponseFixture.getTravelogueSimpleResponses();
+
+    TravelogueSearchRequest searchRequest = new TravelogueSearchRequest("한국", "country");
+    TravelogueFilterRequest filterRequest = new TravelogueFilterRequest(null, null);
+    PageRequest pageRequest = PageRequest.of(0, 5, Sort.by("id"));
+
+    // when
+    Page<TravelogueSimpleResponse> searchResults = service.findSimpleTravelogues(filterRequest, searchRequest,
+            pageRequest);
+
+    // then
+    assertThat(searchResults).containsAll(responses);
+  }
+
+  @DisplayName("여행기를 수정할 수 있다.")
+  @Test
+  void updateTravelogue() {
+    given(s3Provider.copyImageToPermanentStorage(any(String.class)))
+            .willReturn("https://dev.tour.kr/image.png");
+
+    List<TravelogueDayRequest> days = getUpdateTravelogueDayRequests();
+
+    Member author = testHelper.initKakaoMemberTestData();
+    testHelper.initTravelogueTestData(author);
+
+    MemberAuth memberAuth = new MemberAuth(author.getId());
+    TravelogueRequest request = TravelogueRequestFixture.getUpdateTravelogueRequest(days);
+    String updatedTitle = request.title();
+    TravelogueResponse updatedResponse = service.updateTravelogue(1L, memberAuth, request);
+
+    assertThat(updatedResponse.title()).isEqualTo(updatedTitle);
+  }
+
+  private List<TravelogueDayRequest> getUpdateTravelogueDayRequests() {
+    List<TraveloguePhotoRequest> photos = TravelogueRequestFixture.getTraveloguePhotoRequests();
+    List<TraveloguePlaceRequest> places = TravelogueRequestFixture.getUpdateTraveloguePlaceRequests(photos);
+    return TravelogueRequestFixture.getUpdateTravelogueDayRequests(places);
+  }
 }
