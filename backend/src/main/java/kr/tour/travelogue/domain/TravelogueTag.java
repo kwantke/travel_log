@@ -41,4 +41,7 @@ public class TravelogueTag extends AuditingFields {
     this(null, travelogue, tag);
   }
 
+  public void updateTravelogue(Travelogue travelogue) {
+    this.travelogue = travelogue;
+  }
 }

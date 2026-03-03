@@ -23,7 +23,8 @@ import java.util.List;
 public class RequestLoggingFallbackFilter extends OncePerRequestFilter {
 
     private static final List<String> excludedPaths = List.of(
-            "/favicon.ico"
+            "/favicon.ico",
+            "/actuator/**"
     );
     private static final String LOGGED_BY_AOP = "loggedByAop";
     private static final String LOGGED_BY_FILTER = "loggedByFilter";

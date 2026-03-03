@@ -2,6 +2,7 @@ package kr.tour.global.config;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import kr.tour.global.auth.jwt.JwtAuthenticationFilter;
+import kr.tour.global.dto.HttpRequestInfo;
 import kr.tour.global.log.RequestLoggingFallbackFilter;
 import kr.tour.global.log.logger.ConsoleLogger;
 import kr.tour.global.log.logger.JsonLogger;
@@ -10,6 +11,7 @@ import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.Ordered;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
@@ -20,7 +22,6 @@ import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
-import java.util.Arrays;
 import java.util.List;
 
 
@@ -30,11 +31,22 @@ import java.util.List;
 @RequiredArgsConstructor
 public class SecurityConfig {
 
-  private static final String[] PUBLIC_AUTH_ENDPOINTS = {
-          "/api/*/login/**",
-          "/api/v1/tags/**",
-          "/api/v1/travelogues/**"
-  };
+private static final List<HttpRequestInfo> whiteList= List.of(
+        new HttpRequestInfo(HttpMethod.GET, "/actuator/**"),
+        new HttpRequestInfo(HttpMethod.GET, "/h2-console/**"),
+        new HttpRequestInfo(HttpMethod.POST, "/h2-console/**"),
+        new HttpRequestInfo(HttpMethod.GET, "/favicon.ico"),
+        new HttpRequestInfo(HttpMethod.GET, "/swagger-ui/**"),
+        new HttpRequestInfo(HttpMethod.GET, "/swagger-resources/**"),
+        new HttpRequestInfo(HttpMethod.GET, "/v3/api-docs/**"),
+        new HttpRequestInfo(HttpMethod.GET, "/api/v1/travelogues/**"),
+        new HttpRequestInfo(HttpMethod.POST, "/api/v1/login/**"),
+        new HttpRequestInfo(HttpMethod.GET, "/api/v1/travel-plans/shared/**"),
+        new HttpRequestInfo(HttpMethod.POST, "/api/v1/tags/**"),
+        new HttpRequestInfo(HttpMethod.GET, "/api/v1/tags/**"),
+        new HttpRequestInfo(HttpMethod.POST, "/api/v1/members"),
+        new HttpRequestInfo(HttpMethod.OPTIONS, "/**")
+);;
 
   private final JsonLogger jsonLogger;
   private final ConsoleLogger consoleLogger;
@@ -48,12 +60,15 @@ public class SecurityConfig {
             .cors(cors -> cors.configurationSource(corsConfigurationSource()))
             .securityMatcher("/api/**")
             .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-            .authorizeHttpRequests(auth -> auth
-                    .requestMatchers(PUBLIC_AUTH_ENDPOINTS).permitAll().anyRequest().authenticated()
-            ).addFilterBefore(
+            .authorizeHttpRequests(auth -> {
+              whiteList.forEach(info ->
+                      auth.requestMatchers(info.method(), info.urlPattern()).permitAll()
+              );
+              auth.anyRequest().authenticated();
+            }).addFilterBefore(
                     new JwtAuthenticationFilter(
                             consoleLogger,
-                            Arrays.stream(PUBLIC_AUTH_ENDPOINTS).toList(),
+                            whiteList,
                             objectMapper,
                             jwtTokenProvider
                     ),

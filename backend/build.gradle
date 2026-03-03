@@ -68,6 +68,10 @@ dependencies {
   // Log4j2
   implementation 'org.springframework.boot:spring-boot-starter-log4j2'
 
+  // Prometheus
+  implementation 'org.springframework.boot:spring-boot-starter-actuator'
+  implementation 'io.micrometer:micrometer-registry-prometheus'
+
   // Test
   testImplementation 'org.springframework.boot:spring-boot-starter-test'
   testImplementation 'org.springframework.security:spring-security-test'

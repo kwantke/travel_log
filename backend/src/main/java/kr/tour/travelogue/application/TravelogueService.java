@@ -1,10 +1,12 @@
 package kr.tour.travelogue.application;
 
 import kr.tour.global.exception.CoreException;
+import kr.tour.member.domain.Member;
 import kr.tour.travelogue.domain.Travelogue;
 import kr.tour.travelogue.domain.TravelogueFilterCondition;
 import kr.tour.travelogue.domain.exception.TravelogueErrorCode;
 import kr.tour.travelogue.domain.search.SearchCondition;
+import kr.tour.travelogue.dto.request.TravelogueRequest;
 import kr.tour.travelogue.infrastructure.TravelogueRepository;
 import kr.tour.travelogue.infrastructure.query.TravelogueQueryRepository;
 import lombok.RequiredArgsConstructor;
@@ -47,4 +49,26 @@ public class TravelogueService {
     return travelogueRepository.findById(id)
             .orElseThrow(() -> new CoreException(TravelogueErrorCode.INVALID_TRAVELOGUE));
   }
+
+  public Travelogue update(Long id, Member author, TravelogueRequest request) {
+    Travelogue travelogue = getTravelogueById(id);
+    validateAuthor(travelogue, author);
+
+    travelogue.updateDays(request.getTravelogueDays(travelogue));
+    travelogue.update(request.title(), request.thumbnail());
+
+    return travelogue;
+  }
+
+  public void delete(Travelogue travelogue, Member author) {
+    validateAuthor(travelogue, author);
+  }
+
+  private void validateAuthor(Travelogue travelogue, Member author) {
+    if(!travelogue.isAuthor(author)){
+      throw new CoreException(TravelogueErrorCode.FORBIDDEN_TRAVELOGUE);
+    }
+  }
+
+
 }

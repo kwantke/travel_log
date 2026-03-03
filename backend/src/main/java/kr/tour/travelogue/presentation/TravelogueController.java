@@ -74,9 +74,41 @@ public class TravelogueController {
   }
 
   @PostMapping("/{id}/like")
-  public ResponseEntity<TravelogueLikeResponse> likeTravelogue(@PathVariable Long id, @Valid MemberAuth member) {
+  public ResponseEntity<TravelogueLikeResponse> likeTravelogue(
+          @PathVariable Long id,
+          @Valid @AuthenticationPrincipal MemberAuth member) {
     return ResponseEntity.ok()
             .body(travelogueFacadeService.likeTravelogue(id, member));
+  }
+
+  @PutMapping("{id}")
+  public ResponseEntity<Void> updateTravelogue(
+          @PathVariable Long id,
+          @Valid @AuthenticationPrincipal MemberAuth member,
+          @Valid @RequestBody TravelogueRequest request
+  ) {
+    travelogueFacadeService.updateTravelogue(id, member, request);
+    return ResponseEntity.ok().build();
+
+  }
+
+  @DeleteMapping("/{id}")
+  public ResponseEntity<Void> deleteTravelogue(
+          @PathVariable Long id,
+          @Valid @AuthenticationPrincipal MemberAuth memberAuth
+  ) {
+    travelogueFacadeService.deleteTravelogueById(id, memberAuth);
+    return ResponseEntity.noContent()
+            .build();
+  }
+
+  @DeleteMapping("/{id}/like")
+  public ResponseEntity<TravelogueLikeResponse> unlikeTravelogue(
+          @PathVariable Long id,
+          @Valid @AuthenticationPrincipal MemberAuth member
+  ) {
+    return ResponseEntity.ok()
+            .body(travelogueFacadeService.unlikeTravelogue(id, member));
   }
 
 }

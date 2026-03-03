@@ -27,4 +27,18 @@ public class TravelogueLikeService {
       travelogue.increaseLikeCount();
     }
   }
+
+  @Transactional
+  public void deleteAllByTravelogue(Travelogue travelogue) {
+    travelogueLikeRepository.deleteAllByTravelogue(travelogue);
+  }
+
+  @Transactional
+  public void unlikeTravelogue(Travelogue travelogue, Member liker) {
+    boolean exists = travelogueLikeRepository.existsByTravelogueAndLiker(travelogue, liker);
+    if (exists) {
+      travelogueLikeRepository.deleteByTravelogueAndLiker(travelogue, liker);
+      travelogue.decreaseLikeCount();
+    }
+  }
 }

@@ -1,3 +1,9 @@
+app:
+  version: v1.0.0
+
+server:
+  port: 8080
+
 spring:
   config:
     activate:
@@ -42,3 +48,18 @@ cloud:
       origin-storage-path: tour/
       temporary-storage-path: temporary/
       image-storage-path: images/
+
+management:
+  metrics:
+    tags:
+      application: tour
+      env: local
+  endpoints:
+    web:
+      exposure:
+        include: health,info,prometheus,metrics   # 웹으로 노출할 엔드포인트
+  endpoint:
+    metrics:
+      access: read-only        # none | read-only | unrestricted
+    prometheus:
+      access: read-only

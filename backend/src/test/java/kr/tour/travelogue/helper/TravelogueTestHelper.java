@@ -39,7 +39,7 @@ public class TravelogueTestHelper extends DbHelper {
     return travelogue;
   }
 
-  private Travelogue initTravelogueTestDataWithTag(Member author) {
+  public Travelogue initTravelogueTestDataWithTag(Member author) {
     Travelogue travelogue = persistTravelogue(author);
     TravelogueDay day = persistTravelogueDay(travelogue);
     TraveloguePlace place = persistTraveloguePlace(day);
@@ -65,9 +65,11 @@ public class TravelogueTestHelper extends DbHelper {
 
   private void persisTravelogueTag(Travelogue travelogue, Tag tag) {
     Tag savedTag = initTagTestData(tag);
+
     em.persist(new TravelogueTag(travelogue, savedTag));
     em.flush();
   }
+
 
   public Tag initTagTestData(Tag tag) {
     em.persist(tag);

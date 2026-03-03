@@ -9,6 +9,7 @@ import kr.tour.travelogue.infrastructure.TagRepository;
 import kr.tour.travelogue.infrastructure.TravelogueTagRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -19,7 +20,7 @@ public class TravelogueTagService {
   private final TagRepository tagRepository;
   private final TravelogueTagRepository travelogueTagRepository;
 
-
+  @Transactional
   public List<TravelogueTag> createTravelogueTags(Travelogue travelogue, List<Long> tagIds) {
     return tagIds.stream()
             .map(id -> {
@@ -28,10 +29,21 @@ public class TravelogueTagService {
             }).toList();
   }
 
-  private Tag getTagById(Long id) {
+  @Transactional(readOnly = true)
+  public Tag getTagById(Long id) {
     return tagRepository.findById(id)
             .orElseThrow(() -> new CoreException(TravelogueErrorCode.INVALID_TAG));
   }
 
+  @Transactional
+  public List<TravelogueTag> updateTravelogueTag(Travelogue travelogue, List<Long> tags) {
+    deleteAllByTravelogue(travelogue);
+    return createTravelogueTags(travelogue, tags);
 
+  }
+
+  @Transactional
+  public void deleteAllByTravelogue(Travelogue travelogue) {
+    travelogueTagRepository.deleteAllByTravelogue(travelogue);
+  }
 }
