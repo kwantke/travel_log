@@ -3,7 +3,6 @@ package kr.tour.travelogue.application;
 import kr.tour.global.dto.MemberAuth;
 import kr.tour.member.application.MemberService;
 import kr.tour.member.domain.Member;
-import kr.tour.recommand.application.RecommendationService;
 import kr.tour.travelogue.domain.Travelogue;
 import kr.tour.travelogue.domain.TravelogueFilterCondition;
 import kr.tour.travelogue.domain.TravelogueTag;
