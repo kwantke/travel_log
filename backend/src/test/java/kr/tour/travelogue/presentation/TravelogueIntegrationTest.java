@@ -250,7 +250,7 @@ public class TravelogueIntegrationTest extends IntegrationTest {
 
     RestAssured.given().log().all()
             .accept(ContentType.JSON)
-            .params("sort", "likeCount,asc")
+            .params("sort", "likeCount,desc")
             .when().get("/api/v1/travelogues")
             .then().log().all()
             .statusCode(200).assertThat()
