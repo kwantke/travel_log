@@ -71,6 +71,6 @@
 - **CI/CD 자동화**
   - Github Action을 활용하여 소스 빌드 → Docker 이미지 생성 → 서버 배포까지 자동화 합니다.
 - **로그 수집 및 분석 시스템**
-  - 서비스의 로그 수집, 저장, 시각화를 위해 Promtail(파일 로그 수집) + Loki(로그 저장) + Grafana(로그 시각화) 조합으로 구축합니다.
+  - 서비스의 로그 수집, 저장, 시각화를 위해 Promtail + Loki + Grafana 조합으로 구축합니다.
   - Prometheus API를 이용해 실시간 pull 방식으로 데이터를 가져와 Grafana를 통해 시각화합니다.
   
