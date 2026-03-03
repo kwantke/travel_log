@@ -1,6 +1,5 @@
 package kr.tour.auth.dto.response;
 
-import io.swagger.v3.oas.annotations.media.Schema;
 import kr.tour.member.domain.Member;
 import lombok.Builder;
 

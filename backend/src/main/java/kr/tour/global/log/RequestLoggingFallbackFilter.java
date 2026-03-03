@@ -24,7 +24,8 @@ public class RequestLoggingFallbackFilter extends OncePerRequestFilter {
 
     private static final List<String> excludedPaths = List.of(
             "/favicon.ico",
-            "/actuator/**"
+            "/actuator/**",
+            "/swagger-ui/**", "/docs/**", "/webjars/**","/v3/api-docs/**","/.well-known/**"
     );
     private static final String LOGGED_BY_AOP = "loggedByAop";
     private static final String LOGGED_BY_FILTER = "loggedByFilter";
