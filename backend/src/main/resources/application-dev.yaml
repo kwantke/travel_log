@@ -51,6 +51,7 @@ cloud:
       temporary-storage-path: temporary/
       image-storage-path: images/
 
+
 management:
   health:
     redis:
