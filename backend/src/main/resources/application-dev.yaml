@@ -3,11 +3,13 @@ app:
 
 server:
   port: 8080
-
+  forward-headers-strategy: native
 spring:
   config:
     activate:
       on-profile: dev
+  flyway:
+    enabled: true
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
     url: jdbc:mysql://${MYSQL_ENDPOINT}:${MYSQL_PORT}/${MYSQL_DATABASE}?rewriteBatchedStatements=true&serverTimezone=Asia/Seoul&characterEncoding=UTF-8
@@ -43,8 +45,8 @@ logging:
 cloud:
   aws:
     s3:
-      bucket: ${S3_BUCKET}
-      image-base-uri: https://dev.tour.kr/
+      bucket: ${AWS_S3_BUCKET}
+      image-base-uri: ${AWS_IMAGE_BASE_URI}
       origin-storage-path: tour/
       temporary-storage-path: temporary/
       image-storage-path: images/
