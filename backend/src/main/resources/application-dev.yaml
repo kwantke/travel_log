@@ -52,6 +52,9 @@ cloud:
       image-storage-path: images/
 
 management:
+  health:
+    redis:
+      enabled: false
   metrics:
     tags:
       application: tour
