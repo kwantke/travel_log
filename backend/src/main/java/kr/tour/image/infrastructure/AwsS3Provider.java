@@ -22,6 +22,9 @@ import java.util.UUID;
 @Component
 public class AwsS3Provider {
 
+  @Value("${spring.profiles.active:}")
+  private String activeProfile;
+
   private final S3Client s3Client;
   private final String bucket;
   private final String imageBaseUri;
@@ -90,7 +93,9 @@ public class AwsS3Provider {
     String fileName = imageUrl.substring(imageUrl.lastIndexOf("/") + 1);
     String sourceKey = originStoragePath + temporaryStoragePath + fileName;
     String destinationKey = sourceKey.replace(temporaryStoragePath, imageStoragePath);
-    copyFile(sourceKey, destinationKey);
+    if (!activeProfile.contains("local")) {
+      copyFile(sourceKey, destinationKey);
+    }
     return imageUrl.replace(temporaryStoragePath, imageStoragePath);
   }
 
