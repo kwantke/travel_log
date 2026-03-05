@@ -20,8 +20,6 @@ import org.hibernate.annotations.SQLRestriction;
 )
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
-@SQLDelete(sql = "UPDATE travelogue_tag SET deleted_at = NOW() WHERE id = ?")
-@SQLRestriction("deleted_at IS NULL")
 @Entity
 public class TravelogueTag extends AuditingFields {
 

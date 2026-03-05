@@ -36,14 +36,14 @@ public record TravelogueResponse(
         Boolean isLiked
 ) {
 
-  public static TravelogueResponse of(Travelogue travelogue, boolean isLikedFromAccessor) {
-    return baseBuilder(travelogue, travelogue.getTravelogueTags())
+  public static TravelogueResponse of(Travelogue travelogue, List<TravelogueTag> tags, boolean isLikedFromAccessor) {
+    return baseBuilder(travelogue, tags)
             .isLiked(isLikedFromAccessor)
             .build();
   }
 
-  public static TravelogueResponse createResponseForGuest(Travelogue travelogue) {
-    return baseBuilder(travelogue, travelogue.getTravelogueTags())
+  public static TravelogueResponse createResponseForGuest(Travelogue travelogue, List<TravelogueTag> tags) {
+    return baseBuilder(travelogue, tags)
             .isLiked(false)
             .build();
   }

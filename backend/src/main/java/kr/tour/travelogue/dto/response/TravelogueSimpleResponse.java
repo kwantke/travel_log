@@ -33,7 +33,7 @@ public record TravelogueSimpleResponse(
             .thumbnail(travelogue.getThumbnail())
             .authorNickname(travelogue.getAuthor().getNickname())
             .authorProfileUrl(travelogue.getAuthor().getProfileImageUrl())
-            .tags(getTravelogueTags(travelogue.getTravelogueTags()))
+            //.tags(getTravelogueTags(travelogue.getTravelogueTags()))
             .likeCount(travelogue.getLikeCount())
             .build();
   }
@@ -41,5 +41,17 @@ public record TravelogueSimpleResponse(
   private static List<TagResponse> getTravelogueTags(List<TravelogueTag> travelogueTags) {
     return travelogueTags.stream()
             .map(TagResponse::from).toList();
+  }
+
+  public static TravelogueSimpleResponse of(Travelogue travelogue, List<TravelogueTag> tags) {
+    return TravelogueSimpleResponse.builder()
+            .id(travelogue.getId())
+            .title(travelogue.getTitle())
+            .thumbnail(travelogue.getThumbnail())
+            .authorNickname(travelogue.getAuthorNickname())
+            .authorProfileUrl(travelogue.getAuthorProfileImageUrl())
+            .tags(getTravelogueTags(tags))
+            .likeCount(travelogue.getLikeCount())
+            .build();
   }
 }

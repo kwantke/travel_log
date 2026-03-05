@@ -2,10 +2,13 @@ package kr.tour.travelogue.infrastructure.query;
 
 import com.querydsl.core.types.Order;
 import com.querydsl.core.types.OrderSpecifier;
+import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.core.types.dsl.Expressions;
 import com.querydsl.core.types.dsl.StringPath;
+import com.querydsl.jpa.JPAExpressions;
 import com.querydsl.jpa.impl.JPAQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
+import kr.tour.travelogue.domain.QTravelogueTag;
 import kr.tour.travelogue.domain.Travelogue;
 import kr.tour.travelogue.domain.TravelogueFilterCondition;
 import kr.tour.travelogue.domain.enums.CountryCode;
@@ -99,14 +102,31 @@ public class TravelogueQueryRepositoryImpl implements TravelogueQueryRepository{
       return;
     }
 
-    List<Long> tags = filterCondition.getTag();
+    List<Long> tagIds = filterCondition.getTag();
+    tagIds.forEach(tagId -> joinTravelogueTag(baseQuery, tagId));
+    for (Long tagId : tagIds) {
+      baseQuery.where(existsTag(tagId));
+    }
 
-    baseQuery.join(travelogueTag)
-            .on(travelogueTag.travelogue.eq(travelogue))
-            .where(travelogueTag.tag.id.in(tags))
-            .groupBy(travelogue)
-            .having(travelogueTag.count().eq(Long.valueOf(tags.size())));
+  }
+  private BooleanExpression existsTag(Long tagId) {
+    // 서브쿼리용 별칭(중요: 메인에서 쓰는 travelogueTag static과 겹치지 않게)
+    QTravelogueTag tt = new QTravelogueTag("tt_" + tagId);
 
+    return JPAExpressions
+            .selectOne()
+            .from(tt)
+            .where(
+                    tt.travelogue.eq(travelogue)
+                            .and(tt.tag.id.eq(tagId))
+            )
+            .exists();
+  }
+  private void joinTravelogueTag(JPAQuery<Travelogue> query, Long tagId) {
+    QTravelogueTag travelogueTag = new QTravelogueTag("travelogueTag" + tagId);
+    query.join(travelogueTag)
+            .on(travelogueTag.travelogue.eq(travelogue)
+                    .and(travelogueTag.tag.id.eq(tagId)));
   }
 
   private OrderSpecifier<?>[] toOrderSpecifiers(Pageable pageable) {
