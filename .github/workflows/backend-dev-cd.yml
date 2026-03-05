@@ -45,7 +45,8 @@ jobs:
       JWT_REFRESH_EXPIRATION: ${{ secrets.JWT_REFRESH_EXPIRATION }}
       JWT_ACCESS_SECRET_KEY: ${{ secrets.JWT_ACCESS_SECRET_KEY }}
       JWT_ACCESS_EXPIRATION: ${{ secrets.JWT_ACCESS_EXPIRATION }}
-      S3_BUCKET: ${{ secrets.S3_BUCKET }}
+      AWS_S3_BUCKET: ${{ secrets.AWS_S3_BUCKET }}
+      AWS_IMAGE_BASE_URI: ${{ secrets.AWS_IMAGE_BASE_URI }}
     steps:
       - name: Checkout source
         uses: actions/checkout@v4
