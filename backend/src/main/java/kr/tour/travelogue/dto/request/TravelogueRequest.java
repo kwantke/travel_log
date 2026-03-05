@@ -17,7 +17,7 @@ public record TravelogueRequest(
         @NotBlank(message = "여행기 제목은 비어있을 수 없습니다.")
         @Size(message = "여행기 제목은 20자를 초과할 수 없습니다.", max = 20)
         String title,
-        @Schema(description = "여행기 썸네일", example = "S3 이미지 URL")
+        @Schema(description = "여행기 썸네일", example = "https://dev.tour.kr/images/thumbnail.png")
         @NotBlank(message = "여행기 썸네일은 비어있을 수 없습니다.")
         String thumbnail,
         @Schema(description = "선택된 여행기 태그의 id 목록", example = "[1, 2, 3]")

@@ -46,4 +46,8 @@ public class TravelogueTagService {
   public void deleteAllByTravelogue(Travelogue travelogue) {
     travelogueTagRepository.deleteAllByTravelogue(travelogue);
   }
+
+  public List<TravelogueTag> readTagByTravelogue(Travelogue travelogue) {
+    return travelogueTagRepository.findAllByTravelogue(travelogue);
+  }
 }

@@ -39,8 +39,7 @@ public class Travelogue extends AuditingFields {
   @OneToMany(mappedBy = "travelogue", cascade = CascadeType.ALL, orphanRemoval = true)
   private List<TravelogueDay> travelogueDays = new ArrayList<>();
 
-  @OneToMany(mappedBy = "travelogue")
-  private List<TravelogueTag> travelogueTags = new ArrayList<>();
+
 
   private Travelogue(Long id, Member author, String title, String thumbnail, Long likeCount) {
     this.id = id;
@@ -70,7 +69,7 @@ public class Travelogue extends AuditingFields {
     this.thumbnail = thumbnail;
   }
 
-  public void updateTravelogueTag(List<TravelogueTag> travelogueTags) {
+/*  public void updateTravelogueTag(List<TravelogueTag> travelogueTags) {
     this.travelogueTags.clear();
     travelogueTags.forEach(this::addTag);
 
@@ -79,7 +78,7 @@ public class Travelogue extends AuditingFields {
   private void addTag(TravelogueTag travelogueTag) {
     travelogueTag.updateTravelogue(this);
     travelogueTags.add(travelogueTag);
-  }
+  }*/
 
   public void updateThumbnail(String thumbnail) {
     this.thumbnail = thumbnail;

@@ -45,7 +45,13 @@ public class TravelogueFacadeService {
 
     Page<Travelogue> travelogues = travelogueService.findAll(searchCondition, filter, pageable);
 
-    return travelogues.map(TravelogueSimpleResponse::from);
+    return travelogues.map(this::getTravelogueSimpleResponse);
+  }
+
+  private TravelogueSimpleResponse getTravelogueSimpleResponse(Travelogue travelogue) {
+    List<TravelogueTag> travelogueTags = travelogueTagService.readTagByTravelogue(travelogue);
+
+    return TravelogueSimpleResponse.of(travelogue, travelogueTags);
   }
 
   @Transactional
@@ -62,18 +68,19 @@ public class TravelogueFacadeService {
 
   public TravelogueResponse findTravelogueByIdForGuest(Long id) {
     Travelogue travelogue = travelogueService.getTravelogueById(id);
-
-    return TravelogueResponse.createResponseForGuest(travelogue);
+    List<TravelogueTag> travelogueTags = travelogueTagService.readTagByTravelogue(travelogue);
+    return TravelogueResponse.createResponseForGuest(travelogue, travelogueTags);
   }
 
   @Transactional(readOnly = true)
   public TravelogueResponse findTravelogueByIdForAuthenticated(Long id, MemberAuth member) {
     Member accessor = memberService.getMemberById(member.memberId());
     Travelogue travelogue = travelogueService.getTravelogueById(id);
+    List<TravelogueTag> travelogueTags = travelogueTagService.readTagByTravelogue(travelogue);
     boolean likeFromAccessor = travelogueLikeService.existByTravelogueAndMember(travelogue, accessor);
 
     //recommendationService.saveUserRecommendTag(member.memberId(), travelogue.getTravelogueTags());
-    return TravelogueResponse.of(travelogue, likeFromAccessor);
+    return TravelogueResponse.of(travelogue, travelogueTags, likeFromAccessor);
   }
 
   @Transactional
@@ -93,9 +100,8 @@ public class TravelogueFacadeService {
     travelogueImagePerpetuationService.copyTravelogueImagesToPermanentStorage(updated);
     List<TravelogueTag> travelogueTags = travelogueTagService.updateTravelogueTag(updated, updateRequest.tags());
     travelogueCountryService.updateTravelogueCountries(updated, updateRequest);
-    updated.updateTravelogueTag(travelogueTags);
     boolean isLikedFromAccessor = travelogueLikeService.existByTravelogueAndMember(updated, author);
-    return  TravelogueResponse.of(updated, isLikedFromAccessor);
+    return  TravelogueResponse.of(updated, travelogueTags, isLikedFromAccessor);
 
   }
   @Transactional
