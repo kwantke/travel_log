@@ -23,7 +23,7 @@ public class OpenApiConfig {
     localServer.setDescription("로컬 환경 (Local)");
 
     Server devServer = new Server();
-    devServer.setUrl("https://dev-api.travelogue.kr"); // 실제 개발 서버 도메인으로 변경하세요
+    devServer.setUrl("http://54.180.233.234"); // 실제 개발 서버 도메인으로 변경하세요
     devServer.setDescription("개발 환경 (Development)");
 
     Server prodServer = new Server();
