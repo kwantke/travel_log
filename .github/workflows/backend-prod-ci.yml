@@ -2,7 +2,7 @@ name: Backend CI for prod
 
 on:
   pull_request:
-    branches: [ "release" ]
+    branches: [ "release-be" ]
     paths:
       - 'backend/**'
   workflow_dispatch:
@@ -29,6 +29,7 @@ jobs:
       JWT_ACCESS_EXPIRATION: ${{ secrets.JWT_ACCESS_EXPIRATION }}
       AWS_S3_BUCKET: ${{ secrets.AWS_S3_BUCKET }}
       AWS_IMAGE_BASE_URI: ${{ secrets.AWS_IMAGE_BASE_URI }}
+
     steps:
       - name: Checkout
         uses: actions/checkout@v4
