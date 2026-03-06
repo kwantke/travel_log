@@ -94,7 +94,7 @@ jobs:
           MYSQL_USER_PASSWORD=${{ secrets.MYSQL_USER_PASSWORD }}
           MYSQL_PORT=${{ secrets.TEST_MYSQL_PORT }}
           MYSQL_DATABASE=${{ secrets.MYSQL_DATABASE }}
-          MYSQL_ENDPOINT=${{ secrets.MYSQL_WRITER_ENDPOINT }}
+          MYSQL_ENDPOINT=${{ secrets.MYSQL_ENDPOINT }}
           KAKAO_REST_API_KEY=${{ secrets.KAKAO_REST_API_KEY }}
           KAKAO_CLIENT_SECRET=${{ secrets.KAKAO_CLIENT_SECRET }}
           JWT_REFRESH_SECRET_KEY=${{ secrets.JWT_REFRESH_SECRET_KEY }}
