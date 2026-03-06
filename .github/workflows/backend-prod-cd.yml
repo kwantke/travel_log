@@ -96,7 +96,7 @@ jobs:
     needs: build
     if: |
       needs.build.result == 'success'
-    runs-on: [ self-hosted, travelog-prod ]
+    runs-on: [ self-hosted, travelog-dev ]
 
     steps:
       -  name: Login to Docker Hub (for Pull)
