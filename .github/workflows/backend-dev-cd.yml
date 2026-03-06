@@ -108,9 +108,9 @@ jobs:
           
           mv .env.tmp /home/test/travelog/.env
           
-          cd /home/ubuntu/deploy/ && chmod +x deploy.sh
-          
-          /home/test/travelog/deploy.sh
+          cd /home/test/travelog/ 
+          chmod +x deploy.sh          
+          ./deploy.sh
 
 
             
