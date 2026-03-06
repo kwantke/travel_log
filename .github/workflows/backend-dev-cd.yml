@@ -13,6 +13,7 @@ on:
 
 env:
   WORKING_DIR: backend
+  SPRING_PROFILES_ACTIVE: dev
 
 jobs:
   build:
@@ -36,10 +37,9 @@ jobs:
           --health-timeout=5s
           --health-retries=5
     env:
-      ENVIRONMENT: dev
       MYSQL_USERNAME: ${{ secrets.MYSQL_USERNAME }}
       MYSQL_USER_PASSWORD: ${{ secrets.MYSQL_USER_PASSWORD }}
-      MYSQL_PORT: ${{ secrets.TEST_MYSQL_PORT }}
+      MYSQL_PORT: ${{ secrets.MYSQL_PORT }}
       MYSQL_DATABASE: ${{ secrets.MYSQL_DATABASE }}
       MYSQL_ENDPOINT: ${{ secrets.MYSQL_WRITER_ENDPOINT }}
       KAKAO_REST_API_KEY: ${{ secrets.KAKAO_REST_API_KEY }}
@@ -81,7 +81,7 @@ jobs:
           fi
           docker buildx build \
             --platform linux/arm64,linux/amd64 \
-            --build-arg ENVIRONMENT=dev \
+            --build-arg ENVIRONMENT=${{ env.SPRING_PROFILES_ACTIVE }} \
             --cache-from=type=registry,ref=${{ secrets.DOCKERHUB_USERNAME }}/travelog:buildcache \
             --cache-to=type=registry,ref=${{ secrets.DOCKERHUB_USERNAME }}/travelog:buildcache,mode=max \
             -t ${{ secrets.DOCKERHUB_USERNAME }}/travelog:latest \
