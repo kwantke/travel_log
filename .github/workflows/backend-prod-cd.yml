@@ -96,7 +96,7 @@ jobs:
     needs: build
     if: |
       needs.build.result == 'success'
-    runs-on: [ self-hosted, travelog-prod ]
+    runs-on: [ self-hosted, travelog-dev ]
 
     steps:
       -  name: Login to Docker Hub (for Pull)
@@ -108,14 +108,14 @@ jobs:
       - name: Deploy
         run: |
           
-          IMAGE_TAG="${{ needs.build_and_test.outputs.image_tag }}"
+          IMAGE_TAG="${{ needs.build.outputs.version_tag }}"
           
           echo "🚀 ${{ env.SERVICE_NAME }} 배포 시작 (Tag: ${IMAGE_TAG})"
           
           cat <<EOF > .env.tmp
           MYSQL_USERNAME=${{ secrets.MYSQL_USERNAME }}
           MYSQL_USER_PASSWORD=${{ secrets.MYSQL_USER_PASSWORD }}
-          MYSQL_PORT=${{ secrets.TEST_MYSQL_PORT }}
+          MYSQL_PORT=${{ secrets.MYSQL_PORT }}
           MYSQL_DATABASE=${{ secrets.MYSQL_DATABASE }}
           MYSQL_ENDPOINT=${{ secrets.MYSQL_WRITER_ENDPOINT }}
           KAKAO_REST_API_KEY=${{ secrets.KAKAO_REST_API_KEY }}
@@ -132,9 +132,9 @@ jobs:
           
           mv .env.tmp /home/test/travelog/.env
           
-          cd /home/ubuntu/deploy/ && chmod +x deploy.sh
-          
-          /home/test/travelog/deploy.sh
+          cd /home/ubuntu/deploy/ 
+          chmod +x deploy.sh          
+          ./deploy.sh
 
 
             
