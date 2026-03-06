@@ -132,7 +132,7 @@ jobs:
           
           mv .env.tmp /home/test/travelog/.env
           
-          cd /home/ubuntu/deploy/ 
+          cd /home/test/travelog/
           chmod +x deploy.sh          
           ./deploy.sh
 
