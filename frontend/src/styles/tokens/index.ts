@@ -1,5 +1,0 @@
-export * from "./colors";
-export * from "./typography";
-export * from "./spacing";
-export * from "./zIndex";
-export * from "./animation";
