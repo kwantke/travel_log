@@ -36,20 +36,7 @@ jobs:
           --health-interval=10s
           --health-timeout=5s
           --health-retries=5
-    env:
-      MYSQL_USERNAME: ${{ secrets.MYSQL_USERNAME }}
-      MYSQL_USER_PASSWORD: ${{ secrets.MYSQL_USER_PASSWORD }}
-      MYSQL_PORT: ${{ secrets.MYSQL_PORT }}
-      MYSQL_DATABASE: ${{ secrets.MYSQL_DATABASE }}
-      MYSQL_ENDPOINT: ${{ secrets.MYSQL_WRITER_ENDPOINT }}
-      KAKAO_REST_API_KEY: ${{ secrets.KAKAO_REST_API_KEY }}
-      KAKAO_CLIENT_SECRET: ${{ secrets.KAKAO_CLIENT_SECRET }}
-      JWT_REFRESH_SECRET_KEY: ${{ secrets.JWT_REFRESH_SECRET_KEY }}
-      JWT_REFRESH_EXPIRATION: ${{ secrets.JWT_REFRESH_EXPIRATION }}
-      JWT_ACCESS_SECRET_KEY: ${{ secrets.JWT_ACCESS_SECRET_KEY }}
-      JWT_ACCESS_EXPIRATION: ${{ secrets.JWT_ACCESS_EXPIRATION }}
-      AWS_S3_BUCKET: ${{ secrets.AWS_S3_BUCKET }}
-      AWS_IMAGE_BASE_URI: ${{ secrets.AWS_IMAGE_BASE_URI }}
+
     steps:
       - name: Checkout source
         uses: actions/checkout@v4
@@ -84,7 +71,7 @@ jobs:
             --build-arg ENVIRONMENT=${{ env.SPRING_PROFILES_ACTIVE }} \
             --cache-from=type=registry,ref=${{ secrets.DOCKERHUB_USERNAME }}/travelog:buildcache \
             --cache-to=type=registry,ref=${{ secrets.DOCKERHUB_USERNAME }}/travelog:buildcache,mode=max \
-            -t ${{ secrets.DOCKERHUB_USERNAME }}/travelog:latest \
+            -t ${{ secrets.DOCKERHUB_USERNAME }}/travelog:dev \
             --push .
       
   deploy:
@@ -102,9 +89,27 @@ jobs:
 
       - name: Deploy
         run: |
-          whoami
-          pwd
-          ls -al
+          cat <<EOF > .env.tmp
+          MYSQL_USERNAME=${{ secrets.MYSQL_USERNAME }}
+          MYSQL_USER_PASSWORD=${{ secrets.MYSQL_USER_PASSWORD }}
+          MYSQL_PORT=${{ secrets.TEST_MYSQL_PORT }}
+          MYSQL_DATABASE=${{ secrets.MYSQL_DATABASE }}
+          MYSQL_ENDPOINT=${{ secrets.MYSQL_WRITER_ENDPOINT }}
+          KAKAO_REST_API_KEY=${{ secrets.KAKAO_REST_API_KEY }}
+          KAKAO_CLIENT_SECRET=${{ secrets.KAKAO_CLIENT_SECRET }}
+          JWT_REFRESH_SECRET_KEY=${{ secrets.JWT_REFRESH_SECRET_KEY }}
+          JWT_REFRESH_EXPIRATION=${{ secrets.JWT_REFRESH_EXPIRATION }}
+          JWT_ACCESS_SECRET_KEY=${{ secrets.JWT_ACCESS_SECRET_KEY }}
+          JWT_ACCESS_EXPIRATION=${{ secrets.JWT_ACCESS_EXPIRATION }}
+          AWS_S3_BUCKET=${{ secrets.AWS_S3_BUCKET }}
+          AWS_IMAGE_BASE_URI=${{ secrets.AWS_IMAGE_BASE_URI }}
+          EOF
+          
+          
+          mv .env.tmp /home/test/travelog/.env
+          
+          cd /home/ubuntu/deploy/ && chmod +x deploy.sh
+          
           /home/test/travelog/deploy.sh
 
 
