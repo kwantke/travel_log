@@ -1,0 +1,152 @@
+name: Backend CD to EC2 for prod
+
+
+on:
+  push:
+    branches: [ "release-be" ]
+    paths:
+      - 'backend/**'
+  workflow_dispatch:
+    inputs:
+      version_tag:
+        description: '배포할 버전 태그 (예: v1.0.0)'
+        required: true
+        type: string
+
+env:
+  WORKING_DIR: backend
+  SERVICE_NAME: prod-app
+  SPRING_PROFILES_ACTIVE: dev
+jobs:
+  build:
+    name: Build and Upload Artifact
+    outputs:
+      version_tag: ${{ steps.version.outputs.tag }}
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ${{ env.WORKING_DIR }}
+
+    env:
+      MYSQL_USERNAME: ${{ secrets.MYSQL_USERNAME }}
+      MYSQL_USER_PASSWORD: ${{ secrets.MYSQL_USER_PASSWORD }}
+      MYSQL_PORT: ${{ secrets.TEST_MYSQL_PORT }}
+      MYSQL_DATABASE: ${{ secrets.MYSQL_DATABASE }}
+      MYSQL_ENDPOINT: ${{ secrets.MYSQL_WRITER_ENDPOINT }}
+      KAKAO_REST_API_KEY: ${{ secrets.KAKAO_REST_API_KEY }}
+      KAKAO_CLIENT_SECRET: ${{ secrets.KAKAO_CLIENT_SECRET }}
+      JWT_REFRESH_SECRET_KEY: ${{ secrets.JWT_REFRESH_SECRET_KEY }}
+      JWT_REFRESH_EXPIRATION: ${{ secrets.JWT_REFRESH_EXPIRATION }}
+      JWT_ACCESS_SECRET_KEY: ${{ secrets.JWT_ACCESS_SECRET_KEY }}
+      JWT_ACCESS_EXPIRATION: ${{ secrets.JWT_ACCESS_EXPIRATION }}
+      AWS_S3_BUCKET: ${{ secrets.AWS_S3_BUCKET }}
+      AWS_IMAGE_BASE_URI: ${{ secrets.AWS_IMAGE_BASE_URI }}
+    steps:
+      - name: Checkout source
+        uses: actions/checkout@v4
+
+      - name: Set up a Version Tag
+        id: version
+        run: |
+          if [ -z "${{ github.event.inputs.version_tag }}" ]; then
+            echo "버전 태그가 입력되지 않았습니다. 예: v1.0.0"
+            exit 1
+          fi
+
+          INPUT_TAG="${{ github.event.inputs.version_tag }}"
+
+          # 항상 server- 접두사 붙이기
+          VERSION_TAG="server-${INPUT_TAG}"
+
+          echo "최종 서버 버전 태그: $VERSION_TAG"
+
+          # 태그 생성 및 푸시
+          git tag $VERSION_TAG
+          git push origin $VERSION_TAG
+
+          echo "tag=$VERSION_TAG" >> $GITHUB_OUTPUT
+
+      - name: Set up JDK 21
+        uses: actions/setup-java@v4
+        with:
+          java-version: 21
+          distribution: temurin
+
+      - name: Set up Gradle
+        uses: gradle/actions/setup-gradle@v3
+
+      - name: Build executable Spring Boot jar
+        run: ./gradlew clean bootJar
+
+      - name: DockerHub Login
+        uses: docker/login-action@v3
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+
+      - name: Docker Image Build & Push
+        run: |
+          if ! docker buildx inspect ci-builder &>/dev/null; then
+            docker buildx create --use --name ci-builder
+          else
+            docker buildx use ci-builder
+          fi
+          
+          VERSION_TAG="${{ steps.version.outputs.tag }}"
+          
+          docker buildx build \
+            --platform linux/arm64,linux/amd64 \
+            --build-arg ENVIRONMENT=${{ env.SPRING_PROFILES_ACTIVE }} \
+            --cache-from=type=registry,ref=${{ secrets.DOCKERHUB_USERNAME }}/travelog:buildcache \
+            --cache-to=type=registry,ref=${{ secrets.DOCKERHUB_USERNAME }}/travelog:buildcache,mode=max \
+            -t ${{ secrets.DOCKERHUB_USERNAME }}/travelog:${VERSION_TAG} \
+            -t ${{ secrets.DOCKERHUB_USERNAME }}/travelog:prod \
+            --push .
+      
+  deploy:
+    needs: build
+    if: |
+      needs.build.result == 'success'
+    runs-on: [ self-hosted, travelog-prod ]
+
+    steps:
+      -  name: Login to Docker Hub (for Pull)
+         uses: docker/login-action@v3
+         with:
+           username: ${{ secrets.DOCKERHUB_USERNAME }}
+           password: ${{ secrets.DOCKERHUB_TOKEN }}
+
+      - name: Deploy
+        run: |
+          
+          IMAGE_TAG="${{ needs.build_and_test.outputs.image_tag }}"
+          
+          echo "🚀 ${{ env.SERVICE_NAME }} 배포 시작 (Tag: ${IMAGE_TAG})"
+          
+          cat <<EOF > .env.tmp
+          MYSQL_USERNAME=${{ secrets.MYSQL_USERNAME }}
+          MYSQL_USER_PASSWORD=${{ secrets.MYSQL_USER_PASSWORD }}
+          MYSQL_PORT=${{ secrets.TEST_MYSQL_PORT }}
+          MYSQL_DATABASE=${{ secrets.MYSQL_DATABASE }}
+          MYSQL_ENDPOINT=${{ secrets.MYSQL_WRITER_ENDPOINT }}
+          KAKAO_REST_API_KEY=${{ secrets.KAKAO_REST_API_KEY }}
+          KAKAO_CLIENT_SECRET=${{ secrets.KAKAO_CLIENT_SECRET }}
+          JWT_REFRESH_SECRET_KEY=${{ secrets.JWT_REFRESH_SECRET_KEY }}
+          JWT_REFRESH_EXPIRATION=${{ secrets.JWT_REFRESH_EXPIRATION }}
+          JWT_ACCESS_SECRET_KEY=${{ secrets.JWT_ACCESS_SECRET_KEY }}
+          JWT_ACCESS_EXPIRATION=${{ secrets.JWT_ACCESS_EXPIRATION }}
+          AWS_S3_BUCKET=${{ secrets.AWS_S3_BUCKET }}
+          AWS_IMAGE_BASE_URI=${{ secrets.AWS_IMAGE_BASE_URI }}
+          APP_IMAGE_TAG=${IMAGE_TAG}
+          EOF
+          
+          echo "APP_IMAGE_TAG=${IMAGE_TAG}" >> .env.tmp
+          
+          mv .env.tmp /home/test/travelog/.env
+          
+          cd /home/ubuntu/deploy/ && chmod +x deploy.sh
+          
+          /home/test/travelog/deploy.sh
+
+
+            
