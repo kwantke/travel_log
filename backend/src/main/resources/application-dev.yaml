@@ -54,6 +54,11 @@ cloud:
       temporary-storage-path: temporary/
       image-storage-path: images/
 
+swagger:
+  servers:
+    local: ${SWAGGER_SERVERS_LOCAL}
+    dev: ${SWAGGER_SERVERS_DEV}
+    prod: ${SWAGGER_SERVERS_PROD}
 
 management:
   health:
