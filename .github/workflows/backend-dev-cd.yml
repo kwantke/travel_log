@@ -92,7 +92,7 @@ jobs:
           cat <<EOF > .env.tmp
           MYSQL_USERNAME=${{ secrets.MYSQL_USERNAME }}
           MYSQL_PASSWORD=${{ secrets.MYSQL_PASSWORD }}
-          MYSQL_PORT=${{ secrets.TEST_MYSQL_PORT }}
+          MYSQL_PORT=${{ secrets.MYSQL_PORT }}
           MYSQL_DATABASE=${{ secrets.MYSQL_DATABASE }}
           MYSQL_ENDPOINT=${{ secrets.MYSQL_ENDPOINT }}
           KAKAO_REST_API_KEY=${{ secrets.KAKAO_REST_API_KEY }}
