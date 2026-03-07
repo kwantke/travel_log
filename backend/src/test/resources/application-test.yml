@@ -1,6 +1,9 @@
 server:
   port: 8081
 
+app:
+  version: v1.0.0
+
 spring:
   flyway:
     enabled: false
@@ -19,8 +22,16 @@ spring:
     hibernate:
       ddl-auto: create
 
-# Jwt
+cors:
+  allowed-origins: http://localhost:3000,http://54.180.233.234:80
 
+swagger:
+  servers:
+    local: http://localhost:8080
+    dev: http://54.180.233.234
+    prod: https://api.travelogue.kr
+
+# Jwt
 jwt:
   token:
     secret-key: test-TADG67STFSDAGSDFSG4567UTKJHFHSDFGSR231DF
