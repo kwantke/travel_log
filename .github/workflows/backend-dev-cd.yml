@@ -92,7 +92,7 @@ jobs:
           cat <<EOF > .env.tmp
           MYSQL_USERNAME=${{ secrets.MYSQL_USERNAME }}
           MYSQL_PASSWORD=${{ secrets.MYSQL_PASSWORD }}
-          MYSQL_PORT=${{ secrets.TEST_MYSQL_PORT }}
+          MYSQL_PORT=${{ secrets.MYSQL_PORT }}
           MYSQL_DATABASE=${{ secrets.MYSQL_DATABASE }}
           MYSQL_ENDPOINT=${{ secrets.MYSQL_ENDPOINT }}
           KAKAO_REST_API_KEY=${{ secrets.KAKAO_REST_API_KEY }}
@@ -103,6 +103,11 @@ jobs:
           JWT_ACCESS_EXPIRATION=${{ secrets.JWT_ACCESS_EXPIRATION }}
           AWS_S3_BUCKET=${{ secrets.AWS_S3_BUCKET }}
           AWS_IMAGE_BASE_URI=${{ secrets.AWS_IMAGE_BASE_URI }}
+          OTLP_TRACING_ENDPOINT=${{ secrets.OTLP_TRACING_ENDPOINT }}
+          CORS_ALLOWED_ORIGINS=${{ secrets.CORS_ALLOWED_ORIGINS }}
+          SWAGGER_SERVERS_LOCAL=${{ secrets.SWAGGER_SERVERS_LOCAL }}
+          SWAGGER_SERVERS_DEV=${{ secrets.SWAGGER_SERVERS_DEV }}
+          SWAGGER_SERVERS_PROD=${{ secrets.SWAGGER_SERVERS_PROD }}
           EOF
           
           

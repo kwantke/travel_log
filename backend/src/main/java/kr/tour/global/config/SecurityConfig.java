@@ -3,6 +3,7 @@ package kr.tour.global.config;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import kr.tour.global.auth.jwt.JwtAuthenticationFilter;
 import kr.tour.global.dto.HttpRequestInfo;
+import kr.tour.global.log.MdcSetupFilter;
 import kr.tour.global.log.RequestLoggingFallbackFilter;
 import kr.tour.global.log.logger.ConsoleLogger;
 import kr.tour.global.log.logger.JsonLogger;
@@ -21,7 +22,7 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
-
+import org.springframework.beans.factory.annotation.Value;
 import java.util.List;
 
 
@@ -31,28 +32,38 @@ import java.util.List;
 @RequiredArgsConstructor
 public class SecurityConfig {
 
-private static final List<HttpRequestInfo> whiteList= List.of(
-        new HttpRequestInfo(HttpMethod.GET, "/actuator/**"),
-        new HttpRequestInfo(HttpMethod.GET, "/h2-console/**"),
-        new HttpRequestInfo(HttpMethod.POST, "/h2-console/**"),
-        new HttpRequestInfo(HttpMethod.GET, "/favicon.ico"),
-        new HttpRequestInfo(HttpMethod.GET, "/swagger-ui/**"),
-        new HttpRequestInfo(HttpMethod.GET, "/swagger-resources/**"),
-        new HttpRequestInfo(HttpMethod.GET, "/v3/api-docs/**"),
-        new HttpRequestInfo(HttpMethod.GET, "/api/v1/travelogues/**"),
-        new HttpRequestInfo(HttpMethod.POST, "/api/v1/login/**"),
-        new HttpRequestInfo(HttpMethod.GET, "/api/v1/travel-plans/shared/**"),
-        new HttpRequestInfo(HttpMethod.POST, "/api/v1/tags/**"),
-        new HttpRequestInfo(HttpMethod.GET, "/api/v1/tags/**"),
-        new HttpRequestInfo(HttpMethod.POST, "/api/v1/members"),
-        new HttpRequestInfo(HttpMethod.OPTIONS, "/**")
-);;
+  private static final List<HttpRequestInfo> whiteList= List.of(
+          new HttpRequestInfo(HttpMethod.GET, "/actuator/**"),
+          new HttpRequestInfo(HttpMethod.GET, "/h2-console/**"),
+          new HttpRequestInfo(HttpMethod.POST, "/h2-console/**"),
+          new HttpRequestInfo(HttpMethod.GET, "/favicon.ico"),
+          new HttpRequestInfo(HttpMethod.GET, "/swagger-ui/**"),
+          new HttpRequestInfo(HttpMethod.GET, "/swagger-resources/**"),
+          new HttpRequestInfo(HttpMethod.GET, "/v3/api-docs/**"),
+          new HttpRequestInfo(HttpMethod.GET, "/api/v1/travelogues/**"),
+          new HttpRequestInfo(HttpMethod.POST, "/api/v1/login/**"),
+          new HttpRequestInfo(HttpMethod.GET, "/api/v1/travel-plans/shared/**"),
+          new HttpRequestInfo(HttpMethod.POST, "/api/v1/tags/**"),
+          new HttpRequestInfo(HttpMethod.GET, "/api/v1/tags/**"),
+          new HttpRequestInfo(HttpMethod.POST, "/api/v1/members"),
+          new HttpRequestInfo(HttpMethod.OPTIONS, "/**")
+  );
+
+  @Value("${cors.allowed-origins}")
+  private List<String> allowedOrigins;
 
   private final JsonLogger jsonLogger;
   private final ConsoleLogger consoleLogger;
   private final ObjectMapper objectMapper;
   private final JwtTokenProvider jwtTokenProvider;
 
+  @Value("${app.version}")
+  private String serverVersion;
+
+  @Bean
+  public MdcSetupFilter mdcSetupFilter() {
+    return new MdcSetupFilter(serverVersion);
+  }
   @Bean
   public SecurityFilterChain filterChain(HttpSecurity http) throws  Exception{
     return http
@@ -96,12 +107,13 @@ private static final List<HttpRequestInfo> whiteList= List.of(
   public CorsConfigurationSource corsConfigurationSource() {
     CorsConfiguration config = new CorsConfiguration();
 
-    config.setAllowedOrigins(List.of("http://localhost:3000","http://54.180.233.234:80")); // 프론트 주소
+    config.setAllowedOrigins(allowedOrigins); // 프론트 주소
     config.setAllowedMethods(List.of("GET","POST","PUT","PATCH","DELETE","OPTIONS"));
     config.setAllowedHeaders(List.of("*"));
     config.setAllowCredentials(true);
     config.setMaxAge(3600L);
 
+    config.setExposedHeaders(List.of("Location"));
     UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
     source.registerCorsConfiguration("/**", config);
 

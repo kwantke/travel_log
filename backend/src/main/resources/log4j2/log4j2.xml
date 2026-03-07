@@ -22,7 +22,7 @@
     <Property name="logDir">log</Property>
 
     <!-- APP_ENV 환경변수 바인딩 -->
-    <Property name="env">${spring:ENV}</Property>
+    <Property name="env">${spring:spring.config.activate.on-profile}</Property>
   </Properties>
 
   <Appenders>
@@ -50,13 +50,13 @@
         <KeyValuePair key="port" value="${spring:server.port}"/>
         <KeyValuePair key="ip" value="$${ctx:ip}"/>
         <KeyValuePair key="timestamp" value="$${ctx:timestamp}"/>
-        <KeyValuePair key="androidAppVersion" value="$${ctx:androidAppVersion}"/>
+        <KeyValuePair key="frontAppVersion" value="$${ctx:androidAppVersion}"/>
         <KeyValuePair key="serverVersion" value="$${ctx:serverVersion}"/>
         <KeyValuePair key="env" value="${env}"/>
 
         <!-- OpenTelemetry trace 정보 추가 -->
-        <KeyValuePair key="traceId" value="$${ctx:trace_id}"/>
-        <KeyValuePair key="spanId" value="$${ctx:span_id}"/>
+        <KeyValuePair key="traceId" value="$${ctx:traceId}"/>
+        <KeyValuePair key="spanId" value="$${ctx:spanId}"/>
       </JsonLayout>
       <Policies>
         <TimeBasedTriggeringPolicy interval="1" modulate="true"/>

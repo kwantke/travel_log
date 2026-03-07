@@ -4,6 +4,7 @@ app:
 server:
   port: 8080
   forward-headers-strategy: native
+
 spring:
   config:
     activate:
@@ -23,6 +24,9 @@ spring:
         format_sql: true
     hibernate:
       ddl-auto: validate
+
+cors:
+  allowed-origins: ${CORS_ALLOWED_ORIGINS}
 
 jwt:
   token:
@@ -51,6 +55,11 @@ cloud:
       temporary-storage-path: temporary/
       image-storage-path: images/
 
+swagger:
+  servers:
+    local: ${SWAGGER_SERVERS_LOCAL}
+    dev: ${SWAGGER_SERVERS_DEV}
+    prod: ${SWAGGER_SERVERS_PROD}
 
 management:
   health:
@@ -58,8 +67,8 @@ management:
       enabled: false
   metrics:
     tags:
-      application: tour
-      env: local
+      application: travelog
+      env: dev
   endpoints:
     web:
       exposure:
@@ -69,3 +78,9 @@ management:
       access: read-only        # none | read-only | unrestricted
     prometheus:
       access: read-only
+  tracing:
+    sampling:
+      probability: 1.0
+  otlp:
+    tracing:
+      endpoint: ${OTLP_TRACING_ENDPOINT}/v1/traces
