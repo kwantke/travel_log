@@ -3,6 +3,7 @@ package kr.tour.global.config;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import kr.tour.global.auth.jwt.JwtAuthenticationFilter;
 import kr.tour.global.dto.HttpRequestInfo;
+import kr.tour.global.log.MdcSetupFilter;
 import kr.tour.global.log.RequestLoggingFallbackFilter;
 import kr.tour.global.log.logger.ConsoleLogger;
 import kr.tour.global.log.logger.JsonLogger;
@@ -56,6 +57,13 @@ public class SecurityConfig {
   private final ObjectMapper objectMapper;
   private final JwtTokenProvider jwtTokenProvider;
 
+  @Value("${app.version}")
+  private String serverVersion;
+
+  @Bean
+  public MdcSetupFilter mdcSetupFilter() {
+    return new MdcSetupFilter(serverVersion);
+  }
   @Bean
   public SecurityFilterChain filterChain(HttpSecurity http) throws  Exception{
     return http
