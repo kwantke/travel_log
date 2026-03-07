@@ -69,3 +69,10 @@ management:
       access: read-only        # none | read-only | unrestricted
     prometheus:
       access: read-only
+  tracing:
+    sampling:
+      probability: 1.0
+
+    otlp:
+      tracing:
+        endpoint: ${OTLP_TRACING_ENDPOINT}/v1/traces
