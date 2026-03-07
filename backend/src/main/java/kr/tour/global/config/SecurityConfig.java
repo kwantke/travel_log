@@ -113,6 +113,7 @@ public class SecurityConfig {
     config.setAllowCredentials(true);
     config.setMaxAge(3600L);
 
+    config.setExposedHeaders(List.of("Location"));
     UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
     source.registerCorsConfiguration("/**", config);
 
