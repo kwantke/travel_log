@@ -125,7 +125,7 @@ public class ApiLoggingAspect {
     private void setServiceLabel(JoinPoint joinPoint) {
         String declaringTypeName = joinPoint.getSignature().getDeclaringTypeName();
         if (declaringTypeName.startsWith("kr.tour")) {
-            MDC.put("service", "tour");
+            MDC.put("service", "travelog");
             return;
         }
         MDC.put("service", "empty");

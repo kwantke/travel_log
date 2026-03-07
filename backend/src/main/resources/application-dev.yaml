@@ -4,6 +4,7 @@ app:
 server:
   port: 8080
   forward-headers-strategy: native
+
 spring:
   config:
     activate:
@@ -66,8 +67,8 @@ management:
       enabled: false
   metrics:
     tags:
-      application: tour
-      env: local
+      application: travelog
+      env: dev
   endpoints:
     web:
       exposure:
@@ -80,7 +81,6 @@ management:
   tracing:
     sampling:
       probability: 1.0
-
-    otlp:
-      tracing:
-        endpoint: ${OTLP_TRACING_ENDPOINT}/v1/traces
+  otlp:
+    tracing:
+      endpoint: ${OTLP_TRACING_ENDPOINT}/v1/traces
