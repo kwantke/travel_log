@@ -55,7 +55,7 @@ public class AwsS3Provider {
             .map(ImageFile::getFile)
             .forEach(file ->{
               String newFileName = createNewFileName(file.getOriginalFilename());
-              String filePath = originStoragePath + temporaryStoragePath + newFileName;
+              String filePath = temporaryStoragePath + newFileName;
               uploadFile(file, filePath, s3Client);
               String s3Key = imageBaseUri + temporaryStoragePath + newFileName;
               urls.add(s3Key);
