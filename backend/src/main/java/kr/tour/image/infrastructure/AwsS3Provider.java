@@ -91,7 +91,7 @@ public class AwsS3Provider {
 
     validateS3Path(imageUrl);
     String fileName = imageUrl.substring(imageUrl.lastIndexOf("/") + 1);
-    String sourceKey = originStoragePath + temporaryStoragePath + fileName;
+    String sourceKey = temporaryStoragePath + fileName;
     String destinationKey = sourceKey.replace(temporaryStoragePath, imageStoragePath);
     if (!activeProfile.contains("local")) {
       copyFile(sourceKey, destinationKey);
