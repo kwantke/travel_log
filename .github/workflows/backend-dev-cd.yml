@@ -103,6 +103,7 @@ jobs:
           JWT_ACCESS_EXPIRATION=${{ secrets.JWT_ACCESS_EXPIRATION }}
           AWS_S3_BUCKET=${{ secrets.AWS_S3_BUCKET }}
           AWS_IMAGE_BASE_URI=${{ secrets.AWS_IMAGE_BASE_URI }}
+          OTLP_TRACING_ENDPOINT=${{ secrets.OTLP_TRACING_ENDPOINT }}
           EOF
           
           
