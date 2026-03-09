@@ -1,6 +1,7 @@
 package kr.tour.auth.application;
 
 import kr.tour.auth.dto.request.LoginRequest;
+import kr.tour.auth.dto.request.TokenReissueRequest;
 import kr.tour.auth.dto.response.LoginResponse;
 import kr.tour.auth.dto.response.OauthUserInformationResponse;
 import kr.tour.auth.infrastructure.KakaoOauthProvider;
@@ -67,5 +68,14 @@ public class LoginService {
 
     jsonLogger.info(SignUpLogProperty.ofOAuth(savedMember, LoginType.KAKAO));
     return savedMember;
+  }
+
+  public LoginResponse reissueToken(TokenReissueRequest request) {
+    String memberId = jwtTokenProvider.decodeRefreshToken(request.refreshToken());
+
+    Member member = memberRepository.findById(Long.valueOf(memberId))
+            .orElseThrow(() -> new CoreException(MemberErrorCode.NOT_FOUND_MEMBER));
+
+    return LoginResponse.of(member, jwtTokenProvider.createToken(member.getId()));
   }
 }
