@@ -28,6 +28,7 @@ repositories {
   mavenCentral()
 }
 
+
 dependencies {
   implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
   implementation 'org.springframework.boot:spring-boot-starter-security'
@@ -68,6 +69,7 @@ dependencies {
   implementation 'software.amazon.awssdk:auth:2.20.28'
   implementation 'io.findify:s3mock_2.13:0.2.6'
 
+
   // Log4j2
   implementation 'org.springframework.boot:spring-boot-starter-log4j2'
 
@@ -87,6 +89,10 @@ dependencies {
   testFixturesImplementation 'org.springframework.restdocs:spring-restdocs-restassured'
   testFixturesImplementation 'org.springframework.boot:spring-boot-starter-test'
   testFixturesImplementation 'io.rest-assured:rest-assured:5.4.0'
+
+  // testcontainers
+  testImplementation "org.testcontainers:testcontainers:1.20.4"
+  testImplementation 'com.redis:testcontainers-redis:2.2.2'
 
   testFixturesImplementation 'org.springframework.boot:spring-boot-starter-data-jpa'
   testImplementation 'io.rest-assured:rest-assured:5.5.0'
