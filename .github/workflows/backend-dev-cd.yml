@@ -108,6 +108,7 @@ jobs:
           SWAGGER_SERVERS_LOCAL=${{ secrets.SWAGGER_SERVERS_LOCAL }}
           SWAGGER_SERVERS_DEV=${{ secrets.SWAGGER_SERVERS_DEV }}
           SWAGGER_SERVERS_PROD=${{ secrets.SWAGGER_SERVERS_PROD }}
+          LLM_GEMINI_API_KEY=${{ secrets.LLM_GEMINI_API_KEY }}
           EOF
           
           
