@@ -15,6 +15,7 @@ import kr.tour.travelogue.dto.response.TravelogueLikeResponse;
 import kr.tour.travelogue.dto.response.TravelogueResponse;
 import kr.tour.travelogue.dto.response.TravelogueSimpleResponse;
 import lombok.RequiredArgsConstructor;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -26,6 +27,9 @@ import java.util.List;
 @Service
 public class TravelogueFacadeService {
 
+  public static final int MAX_CACHING_PAGE = 5;
+  public static final String TRAVELOGUE_PAGE_CACHE_NAME = "traveloguePage";
+
   private final TravelogueService travelogueService;
   private final TravelogueTagService travelogueTagService;
   private final TravelogueCountryService travelogueCountryService;
@@ -34,6 +38,14 @@ public class TravelogueFacadeService {
   private final MemberService memberService;
   //private final RecommendationService recommendationService;
 
+  @Cacheable(
+          cacheNames = TRAVELOGUE_PAGE_CACHE_NAME,
+          key = "#pageable",
+          condition = "#pageable.pageNumber <= " + MAX_CACHING_PAGE + " && " +
+                  "#filterRequest.toFilterCondition().emptyCondition && " +
+                  "#searchRequest.toSearchCondition().emptyCondition && " +
+                  "#pageable.sort.toString() == 'likeCount: DESC'"
+  )
   @Transactional(readOnly = true)
   public Page<TravelogueSimpleResponse> findSimpleTravelogues(
           TravelogueFilterRequest filterRequest,
@@ -44,6 +56,7 @@ public class TravelogueFacadeService {
     SearchCondition searchCondition = searchRequest.toSearchCondition();
 
     Page<Travelogue> travelogues = travelogueService.findAll(searchCondition, filter, pageable);
+
 
     return travelogues.map(this::getTravelogueSimpleResponse);
   }

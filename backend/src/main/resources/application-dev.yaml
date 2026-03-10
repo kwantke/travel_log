@@ -25,6 +25,15 @@ spring:
     hibernate:
       ddl-auto: validate
 
+llm:
+  active-provider: gemini
+  gemini: # LLM Provider
+    api-key: ${LLM_GEMINI_API_KEY}
+    model: gemini-2.5-flash
+    base-url: https://generativelanguage.googleapis.com/v1beta
+    temperature: 0.7
+    max-output-tokens: 10000
+
 cors:
   allowed-origins: ${CORS_ALLOWED_ORIGINS}
 
