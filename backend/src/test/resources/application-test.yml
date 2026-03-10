@@ -21,6 +21,14 @@ spring:
         dialect: org.hibernate.dialect.H2Dialect
     hibernate:
       ddl-auto: create
+  data:
+    redis:
+      host: localhost
+      port: 6379
+      ttl: 20
+  ai:
+    openai:
+      api-key: sk-proj-open-ai-secret-key
 
 cors:
   allowed-origins: http://localhost:3000,http://54.180.233.234:80
@@ -56,3 +64,4 @@ cloud:
       origin-storage-path: tour/
       temporary-storage-paht: temporary/
       image-storage-path: images/
+
