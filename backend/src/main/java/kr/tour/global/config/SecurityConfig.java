@@ -46,6 +46,7 @@ public class SecurityConfig {
           new HttpRequestInfo(HttpMethod.POST, "/api/v1/tags/**"),
           new HttpRequestInfo(HttpMethod.GET, "/api/v1/tags/**"),
           new HttpRequestInfo(HttpMethod.POST, "/api/v1/members"),
+          new HttpRequestInfo(HttpMethod.POST, "/api/v1/ai/**"),
           new HttpRequestInfo(HttpMethod.OPTIONS, "/**")
   );
 
