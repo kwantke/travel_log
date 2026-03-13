@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.jsontype.BasicPolymorphicTypeValidator;
 import com.fasterxml.jackson.databind.module.SimpleModule;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
+import io.lettuce.core.ClientOptions;
 import kr.tour.global.util.PageDeserializer;
 import kr.tour.global.util.SortDeserializer;
 import org.springframework.beans.factory.annotation.Value;
@@ -15,6 +16,9 @@ import org.springframework.data.domain.Sort;
 import org.springframework.data.redis.cache.RedisCacheConfiguration;
 import org.springframework.data.redis.cache.RedisCacheManager;
 import org.springframework.data.redis.connection.RedisConnectionFactory;
+import org.springframework.data.redis.connection.RedisStandaloneConfiguration;
+import org.springframework.data.redis.connection.lettuce.LettuceClientConfiguration;
+import org.springframework.data.redis.connection.lettuce.LettuceConnectionFactory;
 import org.springframework.data.redis.serializer.GenericJackson2JsonRedisSerializer;
 import org.springframework.data.redis.serializer.RedisSerializationContext;
 import org.springframework.data.redis.serializer.StringRedisSerializer;
@@ -23,13 +27,38 @@ import java.time.Duration;
 
 @Configuration
 public class RedisConfig {
+  @Value("${spring.data.redis.host}")
+  private String host;
 
+  @Value("${spring.data.redis.port}")
+  private int port;
   @Value("${spring.data.redis.ttl}")
   private int cacheTtlMinutes;
 
   private Duration getCacheTtl() {
     return Duration.ofMinutes(cacheTtlMinutes);
   }
+
+
+  @Bean
+  public RedisConnectionFactory redisConnectionFactory() {
+    RedisStandaloneConfiguration redisConfig =
+            new RedisStandaloneConfiguration(host, port);
+
+    ClientOptions clientOptions = ClientOptions.builder()
+            .autoReconnect(false)   // 재접속 루프 최소화, 실패 빠르게
+            .build();
+
+    LettuceClientConfiguration clientConfig = LettuceClientConfiguration.builder()
+            .commandTimeout(Duration.ofMillis(100)) // 명령 대기 짧게
+            .shutdownTimeout(Duration.ZERO)
+            .clientOptions(clientOptions)
+            .build();
+
+    return new LettuceConnectionFactory(redisConfig, clientConfig);
+  }
+
+
   @Bean
   public CacheManager cacheManager(RedisConnectionFactory connectionFactory) {
     return RedisCacheManager.builder(connectionFactory)
