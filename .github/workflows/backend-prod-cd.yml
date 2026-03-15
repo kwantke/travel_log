@@ -133,6 +133,11 @@ jobs:
           SWAGGER_SERVERS_DEV=${{ secrets.SWAGGER_SERVERS_DEV }}
           SWAGGER_SERVERS_PROD=${{ secrets.SWAGGER_SERVERS_PROD }}
           LLM_GEMINI_API_KEY=${{ secrets.LLM_GEMINI_API_KEY }}
+          REDIS_HOST=${{ secrets.REDIS_HOST }}
+          REDIS_PORT=${{ secrets.REDIS_PORT }}
+          REDIS_TTL=${{ secrets.REDIS_TTL }}
+          REDIS_CONNECT_TIMEOUT=${{ secrets.REDIS_CONNECT_TIMEOUT }}
+          REDIS_TIMEOUT=${{ secrets.REDIS_TIMEOUT }}
           EOF
           
           echo "APP_IMAGE_TAG=${IMAGE_TAG}" >> .env.tmp
