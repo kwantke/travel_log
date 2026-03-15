@@ -103,7 +103,7 @@ public class TravelogueQueryRepositoryImpl implements TravelogueQueryRepository{
     }
 
     List<Long> tagIds = filterCondition.getTag();
-    tagIds.forEach(tagId -> joinTravelogueTag(baseQuery, tagId));
+    //tagIds.forEach(tagId -> joinTravelogueTag(baseQuery, tagId));
     for (Long tagId : tagIds) {
       baseQuery.where(existsTag(tagId));
     }
