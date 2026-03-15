@@ -49,7 +49,8 @@ public class RedisConfig {
             new RedisStandaloneConfiguration(host, port);
 
     ClientOptions clientOptions = ClientOptions.builder()
-            .autoReconnect(false)   // 재접속 루프 최소화, 실패 빠르게
+            .autoReconnect(true)   // 재접속 루프 최소화, 실패 빠르게
+            .disconnectedBehavior(ClientOptions.DisconnectedBehavior.REJECT_COMMANDS) // 연결 끊겼을 때 에러 빠르게 발생
             .build();
 
     LettuceClientConfiguration clientConfig = LettuceClientConfiguration.builder()
