@@ -70,8 +70,7 @@ oauth:
 
 logging:
   config: classpath:log4j2/log4j2.xml
-  level:
-    org.springframework.cache: TRACE
+
 cloud:
   aws:
     s3:
