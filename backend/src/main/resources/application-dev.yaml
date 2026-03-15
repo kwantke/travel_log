@@ -38,6 +38,8 @@ spring:
       host: redis
       port: 6379
       ttl: 20
+      connect-timeout: 100ms
+      timeout: 100ms
 llm:
   active-provider: gemini
   gemini: # LLM Provider
