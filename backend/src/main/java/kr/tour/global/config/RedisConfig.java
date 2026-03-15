@@ -35,6 +35,9 @@ public class RedisConfig {
   @Value("${spring.data.redis.ttl}")
   private int cacheTtlMinutes;
 
+  @Value("${spring.data.redis.connect-timeout:5000}")
+  private int connectTimeout;
+
   private Duration getCacheTtl() {
     return Duration.ofMinutes(cacheTtlMinutes);
   }
@@ -50,8 +53,8 @@ public class RedisConfig {
             .build();
 
     LettuceClientConfiguration clientConfig = LettuceClientConfiguration.builder()
-            .commandTimeout(Duration.ofMillis(100)) // 명령 대기 짧게
-            .shutdownTimeout(Duration.ZERO)
+            .commandTimeout(Duration.ofMillis(connectTimeout))
+            .shutdownTimeout(Duration.ofMillis(100))
             .clientOptions(clientOptions)
             .build();
 
