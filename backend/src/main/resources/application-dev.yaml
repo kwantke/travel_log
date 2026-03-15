@@ -40,8 +40,8 @@ spring:
       host: ${REDIS_HOST:redis}
       port: ${REDIS_PORT:6379}
       ttl: ${REDIS_TTL:20}
-      connect-timeout: ${REDIS_CONNECT_TIMEOUT:2000ms}
-      timeout: ${REDIS_TIMEOUT:2000ms}
+      connect-timeout: ${REDIS_CONNECT_TIMEOUT:2000}
+      timeout: ${REDIS_TIMEOUT:2000}
 
 llm:
   active-provider: gemini
