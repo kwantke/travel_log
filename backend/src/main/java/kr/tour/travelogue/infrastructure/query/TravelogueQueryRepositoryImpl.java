@@ -23,6 +23,7 @@ import org.springframework.stereotype.Repository;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 
 import static kr.tour.travelogue.domain.QTravelogue.travelogue;
@@ -38,28 +39,34 @@ public class TravelogueQueryRepositoryImpl implements TravelogueQueryRepository{
   public static final String TEMPLATE = "replace({0}, ' ', '')";
 
   private final JPAQueryFactory jpaQueryFactory;
+
   @Override
   public Page<Travelogue> findAllByCondition(
           SearchCondition searchCondition,
           TravelogueFilterCondition filterCondition,
           Pageable pageable) {
 
-    JPAQuery<Travelogue> baseQuery = jpaQueryFactory.selectFrom(travelogue);
+    JPAQuery<Long> countQuery = jpaQueryFactory.select(travelogue.count()).from(travelogue);
+    addSearchCondition(countQuery, searchCondition);
+    addFilterCondition(countQuery, filterCondition);
+    long total = Optional.ofNullable(countQuery.fetchOne()).orElse(0L);
 
-    addSearchCondition(baseQuery, searchCondition);
-    addFilterCondition(baseQuery, filterCondition);
+    JPAQuery<Travelogue> dataQuery = jpaQueryFactory.selectFrom(travelogue);
+    addSearchCondition(dataQuery, searchCondition);
+    addFilterCondition(dataQuery, filterCondition);
 
-    List<Travelogue> results = baseQuery.orderBy(toOrderSpecifiers(pageable))
+    List<Travelogue> results = dataQuery
+            .orderBy(toOrderSpecifiers(pageable))
             .offset(pageable.getOffset())
             .limit(pageable.getPageSize())
             .fetch();
 
-    return new PageImpl<>(results, pageable, results.size());
+    return new PageImpl<>(results, pageable, total);
   }
 
 
 
-  private void addSearchCondition(JPAQuery<Travelogue> baseQuery, SearchCondition condition) {
+  private void addSearchCondition(JPAQuery<?> baseQuery, SearchCondition condition) {
     String keyword = condition.getKeyword();
 
     if (condition.getSearchType() == SearchType.COUNTRY) {
@@ -73,10 +80,9 @@ public class TravelogueQueryRepositoryImpl implements TravelogueQueryRepository{
     }
   }
 
-  private void findByTitleOrAuthor(SearchCondition condition, JPAQuery<Travelogue> baseQuery, String keyword) {
+  private void findByTitleOrAuthor(SearchCondition condition, JPAQuery<?> baseQuery, String keyword) {
     baseQuery.where(Expressions.stringTemplate(TEMPLATE, getTargetField(condition.getSearchType()))
-                    .containsIgnoreCase(keyword.replace(BLANK, EMPTY)))
-            .orderBy(travelogue.id.desc());
+            .containsIgnoreCase(keyword.replace(BLANK, EMPTY)));
   }
 
   private StringPath getTargetField(SearchType searchType) {
@@ -86,28 +92,25 @@ public class TravelogueQueryRepositoryImpl implements TravelogueQueryRepository{
     return travelogue.title;
   }
 
-  private void findByCountryCode(JPAQuery<Travelogue> baseQuery, CountryCode countryCode) {
+  private void findByCountryCode(JPAQuery<?> baseQuery, CountryCode countryCode) {
     baseQuery.join(travelogueCountry)
             .on(travelogue.id.eq(travelogueCountry.travelogue.id))
             .where(travelogueCountry.countryCode.eq(countryCode));
-
   }
 
-  private void addFilterCondition(JPAQuery<Travelogue> baseQuery, TravelogueFilterCondition filterCondition) {
+  private void addFilterCondition(JPAQuery<?> baseQuery, TravelogueFilterCondition filterCondition) {
     addTagFilter(baseQuery, filterCondition);
   }
 
-  private void addTagFilter(JPAQuery<Travelogue> baseQuery, TravelogueFilterCondition filterCondition) {
+  private void addTagFilter(JPAQuery<?> baseQuery, TravelogueFilterCondition filterCondition) {
     if (filterCondition.isEmptyTagCondition()) {
       return;
     }
 
     List<Long> tagIds = filterCondition.getTag();
-    //tagIds.forEach(tagId -> joinTravelogueTag(baseQuery, tagId));
     for (Long tagId : tagIds) {
       baseQuery.where(existsTag(tagId));
     }
-
   }
   private BooleanExpression existsTag(Long tagId) {
     // 서브쿼리용 별칭(중요: 메인에서 쓰는 travelogueTag static과 겹치지 않게)

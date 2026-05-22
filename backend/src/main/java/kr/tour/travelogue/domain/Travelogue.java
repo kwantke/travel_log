@@ -101,7 +101,7 @@ public class Travelogue extends AuditingFields {
   }
 
   public boolean isAuthor(Member author) {
-    return author.getId() == this.author.getId();
+    return author.getId().equals(this.author.getId());
   }
 
 

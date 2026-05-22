@@ -60,8 +60,10 @@ public class TravelogueService {
     return travelogue;
   }
 
+  @Transactional
   public void delete(Travelogue travelogue, Member author) {
     validateAuthor(travelogue, author);
+    travelogueRepository.delete(travelogue);
   }
 
   private void validateAuthor(Travelogue travelogue, Member author) {
